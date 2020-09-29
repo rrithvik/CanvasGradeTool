@@ -1,68 +1,23 @@
-//find all the image in answer feed,thumbnail and ad feeds and add blurclasses
-var blurImage = function(){
-    $('.answer_body_preview').find("img").addClass('blurimage');
-    $('.ui_layout_thumbnail').addClass('blurthumb');
-    $('.HyperLinkFeedStory ').find("img").addClass('blurimage');
-    $('.hyperlink_image').addClass('blurthumb');
-}
-
-//find all the image in answer feed,thumbnail and ad feeds and remove blurclasses
-var unblurImage=function(){
-    $('.answer_body_preview').find("img").removeClass('blurimage');
-    $('.ui_layout_thumbnail').removeClass('blurthumb');
-    $('.HyperLinkFeedStory ').find("img").removeClass('blurimage');
-    $('.hyperlink_image').removeClass('blurthumb');
-}
-
-var addListeners=function(){
-    $( "<style> .blurimage { -webkit-filter: blur(50px); filter: blur(50px) } .blurthumb { -webkit-filter: blur(5px); -moz-filter: blur(5px); -o-filter: blur(5px); -ms-filter: blur(5px); filter: blur(5px); width: 100px; height: 100px; background-color: #ccc;}</style>" ).appendTo( "head" );
-    blurImage();
-
-    $(window).scroll(function(){
-        blurImage();
-    });
-
-    $('.ui_qtext_more_link').click(function(){
-        blurImage();
-    });
-
-    $('.blurimage').click(function(){
-        $(this).removeClass('.blurimage'); //if user wanted to see image let them click and see
-    });
-
-    $('.blurthumb').click(function(){
-        $(this).removeClass('.blurthumb'); //if user wanted to see image let them click and see
-    });
-}
-
-var removeListeners=function(){
-    $(window).unbind('scroll');
-    $('.ui_qtext_more_link').unbind('click');
-    $('.blurimage').unbind('click');
-    $('.blurthumb').unbind('click');
-    unblurImage();
-}
 //
 // function calcIndGrades(index){
 //
 // }
-
+function getScores() {}
 //message listener for background
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    {
 
     if(request.command === "clicked"){
         let assignments = document.getElementById("grades_summary").querySelectorAll(".student_assignment:not(.hard_coded):not(.dropped)");
         let scores = {};
-        let weightedGrades = {}
         for(let i = 0; i<assignments.length; i++){
             let subj = assignments[i].getElementsByClassName("context")[0].textContent;
-            let score = assignments[i].getElementsByClassName("what_if_score")[0].textContent;
+            let score = assignments[i].getElementsByClassName("original_points")[0].textContent;
             if (isNaN(parseFloat(score))){
-                score = '0'
+                score = '0';
             }
             let possible = assignments[i].getElementsByClassName("points_possible")[0].textContent;
             if (isNaN(parseFloat(possible))){
-                possible = '0'
+                possible = '0';
             }
             console.log(subj +  '  ' + score + '   ' + possible);
             if(subj in scores){
@@ -72,7 +27,72 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
             else {
                 scores[subj] = [parseFloat(score), parseFloat(possible)];
             }
+            let det = assignments[i].getElementsByClassName("details")[0];
+            $(det).empty();
+            let remBt = document.createElement('button');
+            remBt.textContent = 'X';
+            remBt.className = 'remBt';
+            remBt.onclick = function(){$(this).parent().parent().remove()};
+            det.appendChild(remBt);
         }
+
+        let tb = document.getElementById("grades_summary").getElementsByTagName('tbody')[0];
+        let addElements = document.createElement('tr');
+        addElements.className='addAssignmentDiv';
+        let selTitle = document.createElement('th');
+        let selCat = document.createElement('td');
+        let empStat = document.createElement('td');
+        let selScore = document.createElement('td');
+        let selTotal = document.createElement('td');
+        let addElemBD = document.createElement('td');
+        let addElemBt= document.createElement('button');
+        let dropdown = document.createElement('select');
+        let opt;
+
+        //configure select title input
+        selTitle.textContent = 'Assignment Name';
+        selTitle.id = 'selTitle';
+        selTitle.contentEditable = 'true';
+        dropdown.id = 'selCategory';
+        //add dropdown to select category tr tag
+        for (const [subj, vals] of Object.entries(scores)) {
+            opt = document.createElement('option');
+            opt.value = subj;
+            opt.textContent = subj;
+            dropdown.appendChild(opt);
+        }
+        selCat.appendChild(dropdown);
+
+        //add temp val of 0 to both scores and total and make them editable
+        selScore.id = 'selScore';
+        selScore.textContent = '0';
+        selScore.contentEditable = 'true';
+        selTotal.id = 'selTotal';
+        selTotal.textContent = '0';
+        selTotal.contentEditable = 'true';
+
+        //configure the Add Button
+        addElemBt.id = 'addAssignment';
+        addElemBt.textContent = 'Add Assignment';
+        addElemBD.appendChild(addElemBt);
+
+        //add All Elements to the larger Element to add to the document to allow for adding assignments
+        addElements.appendChild(selTitle);
+        addElements.appendChild(selCat);
+        addElements.appendChild(empStat);
+        addElements.appendChild(selScore);
+        addElements.appendChild(selTotal);
+        addElements.appendChild(addElemBD);
+
+        tb.insertBefore(addElements, tb.firstChild);
+
+        let s = document.createElement('script');
+        s.src = chrome.runtime.getURL('/static/js/injectScript.js');
+        s.onload = function() {
+            this.remove();
+        };
+        (document.head || document.documentElement).appendChild(s);
+
         $.get(chrome.runtime.getURL('/templates/table.html'), function(data) {
             let loc = document.getElementById("print-grades-container");
             let cont = document.createElement("div");
@@ -83,7 +103,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
             for (const [subj, vals] of Object.entries(scores)) {
                 let tempTr = document.createElement("tr");
                 let tempTh = document.createElement("th");
-                tempTh.textContent = subj;
+                let tempInp = document.createElement("input");
+                tempInp.className="catName";
+                tempInp.setAttribute('value',subj);
+                tempTh.appendChild(tempInp);
                 let tempTd = document.createElement("td");
                 let finalTd = document.createElement("td");
                 let weight = (100 / Object.keys(scores).length).toFixed(2);
