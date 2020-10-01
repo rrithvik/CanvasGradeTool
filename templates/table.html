@@ -1,23 +1,45 @@
 <div>
-<div>
-    <h>GRADE WEIGHTS</h>
-    <table id="grade_weights_table" class="show_grades summary">
-        <thead>
-            <tr>
-                <th scope="col">Group<button id="addCatBt">Add Category</button></th>
-                <th scope="col">Weight</th>
-                <th scope="col">Score</th>
-            </tr>
-        </thead>
-        <tbody id="table_grade_body">
+    <div>
+        <h1>GRADE WEIGHTS</h1>
+        <table id="grade_weights_table" class="show_grades summary">
+            <thead>
+                <tr>
+                    <th scope="col">Group<button id="addCatBt">Add Category</button></th>
+                    <th scope="col">Weight (%)</th>
+                    <th scope="col">Score</th>
+                </tr>
+            </thead>
+            <tbody id="table_grade_body">
+                <tr id="tot_table_row" style="font-weight: bold;">
+                    <th scope="row">Total</th>
+                    <td id="total_grade">100%</td>
+                    <td id="final_grade">100%</td>
+                </tr>
+            </tbody>
+        </table>
+        <button id="recalculate">Calculate Grades</button>
+    </div>
+    <script>
+        $("#addCatBt").on('click', function() {
+            let body = document.getElementById("table_grade_body");
+            let ttr = document.getElementById("tot_table_row");
+            let temp = document.createElement('tr');
+            temp.innerHTML = tempCat;
+            body.insertBefore(temp, ttr);
 
-            <tr id="tot_table_row" style="font-weight: bold;">
-                <th scope="row">Total</th>
-                <td id="total_grades">100%</td>
-                <td id="final_grade">100%</td>
-            </tr>
-        </tbody>
-    </table>
-    <button id="recalculate">Calculate Grades</button>
-</div>
+            $(dropdown).empty();
+            for(let i = 0; i<categories.length; i++){
+                let name = categories[i].value;
+                let opt = document.createElement('option');
+                opt.textContent=name;
+                opt.value=name;
+                dropdown.appendChild(opt);
+
+            }
+            reCalc();
+        });
+        $('#recalculate').on("click", function() {
+            reCalc();
+        });
+    </script>
 </div>

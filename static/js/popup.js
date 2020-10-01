@@ -9,7 +9,7 @@ calcGrades.onclick = function(element) {
             console.log(response);
         });
     });
-
+    calcGrades.disabled = 'true';
 };
 // reCalcGrades.onclick = function(element) {
 //     //update the extension storage value
