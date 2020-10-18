@@ -1,5 +1,5 @@
-let tempCat =  '   <th><input class="catName" value="CATEGORY NAME"></th>' +
-                '   <td id="catWeight" contenteditable="true">0</td>' +
+let tempCat =  '   <th><input type="text" class="catName" value="CATEGORY NAME"></th>' +
+                '   <td> <input type="number" style="max-width: 50px" id="catWeight" contenteditable="true" value="0"></td>' +
                 '   <td id="catPercent">0.00</td>';
 
 let categories = document.getElementsByClassName("catName");
@@ -15,7 +15,7 @@ $("#addAssignment").on('click', function() {
     tempTr.className = 'student_assignment assignment_graded editable';
     aTitle.className = 'title';
     aName.id = 'assignment_name';
-    aName.textContent = document.getElementById('selTitle').textContent;
+    aName.textContent = document.getElementById('selTitle').value;
     aCategory.id = 'assignment_category';
     aCategory.className = 'context context_hover';
     aCategory.textContent = document.getElementById('selCategory').value;
@@ -36,12 +36,12 @@ $("#addAssignment").on('click', function() {
     let aScoreS2 = document.createElement('span');
     aScoreS2.className = 'grade';
     aScoreS2.id = 'assignment_score';
-    aScoreS2.textContent = document.getElementById('selScore').textContent;
+    aScoreS2.textContent = document.getElementById('selScore').value;
     let aScoreD2 = document.createElement('div');
     aScoreD2.style = 'display: none;';
     let aScoreS3 = document.createElement('span');
     aScoreS3.className = 'original_points';
-    aScoreS3.textContent = document.getElementById('selScore').textContent;
+    aScoreS3.textContent = document.getElementById('selScore').value;
     aScoreS1.appendChild(aScoreS2);
     aScoreD1.appendChild(aScoreS1);
     aScoreD2.appendChild(aScoreS3);
@@ -51,7 +51,7 @@ $("#addAssignment").on('click', function() {
 
     let aTotal = document.createElement('td')
     aTotal.className = "possible points_possible"
-    aTotal.textContent = document.getElementById('selTotal').textContent;
+    aTotal.textContent = document.getElementById('selTotal').value;
     tempTr.appendChild(aTotal);
     let remDiv = document.createElement('td');
     let remBt = document.createElement('button');
@@ -127,7 +127,7 @@ function reCalc(){
     for (const [subj, vals] of Object.entries(scores)) {
         for(let i = 0; i<categories.length; i++){
             if (categories[i].value === subj){
-                let weight = parseFloat($(categories[i].parentElement.parentElement).find('#catWeight')[0].textContent);
+                let weight = parseFloat($(categories[i].parentElement.parentElement).find('#catWeight')[0].value);
                 let finalTd = $(categories[i].parentElement.parentElement).find('#catPercent')[0];
                 let finalVals = 0;
                 if(vals[1] !== 0){

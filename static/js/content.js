@@ -127,20 +127,26 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
     let tb = document.getElementById("grades_summary").getElementsByTagName('tbody')[0];
     let addElements = document.createElement('tr');
     addElements.className='addAssignmentDiv';
-    let selTitle = document.createElement('th');
+    let selTitleTh = document.createElement('th');
+    let selTitle = document.createElement('input');
     let selCat = document.createElement('td');
     let empStat = document.createElement('td');
-    let selScore = document.createElement('td');
-    let selTotal = document.createElement('td');
+    let selScoreTd = document.createElement('td');
+    let selScore = document.createElement('input');
+    let selTotalTd = document.createElement('td');
+    let selTotal = document.createElement('input');
     let addElemBD = document.createElement('td');
     let addElemBt= document.createElement('button');
     let dropdown = document.createElement('select');
     let opt;
 
     //configure select title input
-    selTitle.textContent = 'Assignment Name';
+    selTitle.value = 'Assignment Name';
+    selTitle.type = 'text';
     selTitle.id = 'selTitle';
-    selTitle.contentEditable = 'true';
+    // selTitle.contentEditable = 'true';
+    selTitleTh.appendChild(selTitle);
+
     dropdown.id = 'selCategory';
     //add dropdown to select category tr tag
     for (const [subj, vals] of Object.entries(scores)) {
@@ -153,23 +159,30 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
 
     //add temp val of 0 to both scores and total and make them editable
     selScore.id = 'selScore';
-    selScore.textContent = '0';
-    selScore.contentEditable = 'true';
+    selScore.value = '0';
+    selScore.type = 'number';
+    selScore.style = 'max-width: 50px;';
+    selScoreTd.appendChild(selScore);
+    // selScore.contentEditable = 'true';
     selTotal.id = 'selTotal';
-    selTotal.textContent = '0';
-    selTotal.contentEditable = 'true';
+    selTotal.value = '0';
+    selTotal.type = 'number';
+    selTotal.style = 'max-width: 50px;';
+    selTotalTd.appendChild(selTotal);
+    // selTotal.contentEditable = 'true';
 
     //configure the Add Button
     addElemBt.id = 'addAssignment';
+    addElemBt.className = 'btn';
     addElemBt.textContent = 'Add Assignment';
     addElemBD.appendChild(addElemBt);
 
     //add All Elements to the larger Element to add to the document to allow for adding assignments
-    addElements.appendChild(selTitle);
+    addElements.appendChild(selTitleTh);
     addElements.appendChild(selCat);
     addElements.appendChild(empStat);
-    addElements.appendChild(selScore);
-    addElements.appendChild(selTotal);
+    addElements.appendChild(selScoreTd);
+    addElements.appendChild(selTotalTd);
     addElements.appendChild(addElemBD);
 
     tb.insertBefore(addElements, tb.firstChild);
@@ -187,12 +200,16 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
             let tempTr = document.createElement("tr");
             let tempTh = document.createElement("th");
             let tempInp = document.createElement("input");
+            tempInp.type = 'text';
             tempInp.className="catName";
             tempInp.setAttribute('value',subj);
             tempTh.appendChild(tempInp);
             let tempTd = document.createElement("td");
+            let tempWeight = document.createElement("input");
             let finalTd = document.createElement("td");
-            tempTd.id = 'catWeight';
+            tempWeight.id = 'catWeight';
+            tempWeight.type = "number";
+            tempWeight.style = "max-width: 50px"
             finalTd.id = 'catPercent';
             let weight = (100 / Object.keys(scores).length).toFixed(2);
 
@@ -201,9 +218,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
                 finalVals = vals[0] / vals[1] * 100;
             }
             finalTot += (finalVals / 100 * weight);
-            tempTd.contentEditable = "true";
-            tempTd.textContent = weight.toString();
+            // tempTd.contentEditable = "true";
+            console.log(weight.toString());
+            tempWeight.setAttribute('value',weight.toString());
             finalTd.textContent = finalVals.toFixed(2).toString() + '%';
+            tempTd.appendChild(tempWeight);
             tempTr.appendChild(tempTh);
             tempTr.appendChild(tempTd);
             tempTr.appendChild(finalTd);

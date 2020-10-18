@@ -1,10 +1,14 @@
 <div>
     <div>
-        <h1>GRADE WEIGHTS</h1>
+        <h1>Grade Weights</h1>
         <table id="grade_weights_table" class="show_grades summary">
             <thead>
                 <tr>
-                    <th scope="col">Group<button id="addCatBt">Add Category</button></th>
+                    <th scope="col">Group<div style="padding-left: 1%">
+                        <button class="btn" type="button" id="addCatBt">Add Category</button>
+
+                    </div>
+                    </th>
                     <th scope="col">Weight (%)</th>
                     <th scope="col">Score</th>
                 </tr>
@@ -17,7 +21,9 @@
                 </tr>
             </tbody>
         </table>
-        <button id="recalculate">Calculate Grades</button>
+        <div style="padding-top: 1%;">
+            <button class="btn btn-primary" type="button" id="recalculate">Calculate</button>
+        </div>
     </div>
     <script>
         $("#addCatBt").on('click', function() {
