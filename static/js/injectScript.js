@@ -76,12 +76,29 @@ $(document).on('input', '.catName', function() {
         opt.textContent=name;
         opt.value=name;
         dropdown.appendChild(opt);
-
+    }
+    let tableTr = document.getElementById('assignments-not-weighted').children[0].getElementsByClassName('show_grades')[0].children[1].children;
+    let weights = {};
+    for(let i=0; i<tableTr.length-1;i++){
+        let subj = tableTr[i].children[0].children[0].value;
+        let perc = tableTr[i].children[1].children[0].value;
+        weights[subj] = perc;
+    }
+    let group_totals = document.getElementsByClassName('student_assignment hard_coded group_total');
+    console.log(weights);
+    for(let i = 0; i<group_totals.length; i++){
+        let subj = group_totals[i].children[0].textContent.trim();
+        console.log(subj);
+        if(!(subj in weights)){
+            group_totals[i].children[0].textContent = this.value;
+        }
     }
 });
 
 function reCalc(){
     let scores = {};
+    let final_grade = document.getElementsByClassName('student_assignment final_grade')[1];
+    let group_totals = document.getElementsByClassName('student_assignment hard_coded group_total');
     let assignments = document.getElementById("grades_summary").querySelectorAll(".student_assignment:not(.hard_coded):not(.dropped)");
     for(let i = 0; i<assignments.length; i++){
         let subj = assignments[i].getElementsByClassName("context")[0].textContent;
@@ -115,7 +132,21 @@ function reCalc(){
             }
         }
     }
-
+    let tableTr = document.getElementById('assignments-not-weighted').children[0].getElementsByClassName('show_grades')[0].children[1].children;
+    let weights = {};
+    let trueWeights = {};
+    for(let i=0; i<tableTr.length-1;i++){
+        let subj = tableTr[i].children[0].children[0].textContent;
+        let perc = tableTr[i].children[1].children[0].textContent;
+        weights[subj] = perc;
+    }
+    for (const [subj, vals] of Object.entries(weights)) {
+        trueWeights[subj] = vals;
+        if(!(subj in scores)){
+            scores[subj] = [0.00,0.00];
+            trueWeights[subj] = 0;
+        }
+    }
     let finalTot = 0;
     let finalWeight = 0;
     for(let i = 0; i<categories.length; i++){
@@ -124,6 +155,12 @@ function reCalc(){
     }
     document.getElementById("final_grade").textContent = '0.00%';
 
+    for(let i=0; i<group_totals.length; i++){
+        let subj = group_totals[i].getElementsByClassName('title')[0].textContent.trim();
+        console.log(subj, scores[subj]);
+        group_totals[i].getElementsByClassName('grade')[0].innerHTML = (parseFloat(scores[subj][0])/parseFloat(scores[subj][1])*100).toFixed(2).toString() + '%';
+        group_totals[i].getElementsByClassName('points_possible')[0].innerHTML = scores[subj][0] + '/' + scores[subj][1];
+    }
     for (const [subj, vals] of Object.entries(scores)) {
         for(let i = 0; i<categories.length; i++){
             if (categories[i].value === subj){
@@ -140,8 +177,10 @@ function reCalc(){
             if (finalWeight > 100){
                 finalWeight = 100;
             }
-            document.getElementById("total_grade").textContent = (finalWeight).toFixed(2).toString() + '%';
-            document.getElementById("final_grade").textContent = (finalTot *100/finalWeight).toFixed(2).toString() + '%';
         }
     }
+    document.getElementById("total_grade").textContent = (finalWeight).toFixed(2).toString() + '%';
+    document.getElementById("final_grade").textContent = (finalTot *100/finalWeight).toFixed(2).toString() + '%';
+    final_grade.innerHTML = 'Total: ' + (finalTot/finalWeight *100).toFixed(2).toString() + '%';
+
 }

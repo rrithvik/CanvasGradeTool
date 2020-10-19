@@ -1,14 +1,14 @@
 <div>
     <div>
         <h1>Grade Weights</h1>
+        <div style="padding-left: 1%">
+            <button class="btn" type="button" id="addCatBt">Add Category</button>
+
+        </div>
         <table id="grade_weights_table" class="show_grades summary">
             <thead>
                 <tr>
-                    <th scope="col">Group<div style="padding-left: 1%">
-                        <button class="btn" type="button" id="addCatBt">Add Category</button>
-
-                    </div>
-                    </th>
+                    <th scope="col">Group</th>
                     <th scope="col">Weight (%)</th>
                     <th scope="col">Score</th>
                 </tr>
@@ -40,8 +40,28 @@
                 opt.textContent=name;
                 opt.value=name;
                 dropdown.appendChild(opt);
-
             }
+            let final_score = document.getElementsByClassName('student_assignment hard_coded final_grade')[0];
+            let newCatTr = document.createElement('tr');
+            newCatTr.className = 'student_assignment hard_coded group_total';
+            newCatTr.innerHTML = '<th class="title" scope="row">\n' +
+                'New Category\n' +
+                '        </th>\n' +
+                '        <td class="due">\n' +
+                '        </td>\n' +
+                '\n' +
+                '        <td class="status" scope="row">\n' +
+                '        </td>\n' +
+                '\n' +
+                '        <td class="assignment_score" title="">\n' +
+                '          <div style="position: relative; height: 100%;" class="score_holder">\n' +
+                '              <span class="grade">NaN%</span>\n' +
+                '          </div>\n' +
+                '        </td>\n' +
+                '        <td class="possible points_possible" aria-label="">0.00 / 0.00</td>\n' +
+                '        <td class="details">\n' +
+                '        </td>';
+            $(newCatTr).insertBefore(final_score);
             reCalc();
         });
         $('#recalculate').on("click", function() {
