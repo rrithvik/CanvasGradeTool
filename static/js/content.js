@@ -14,6 +14,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
     };
     (document.head || document.documentElement).appendChild(s);
     let scores = {};
+    let final_grade = document.getElementsByClassName('student_assignment final_grade')[0];
     let assignments = document.getElementById("grades_summary").querySelectorAll(".student_assignment:not(.hard_coded):not(.dropped)");
     for(let i = 0; i<assignments.length; i++){
         let subj = assignments[i].getElementsByClassName("context")[0].textContent;
@@ -56,6 +57,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
             $(this).parent().parent().remove();
             let categories = document.getElementsByClassName("catName");
             let dropdown = document.getElementById('selCategory');
+            let final_grade = document.getElementsByClassName('student_assignment final_grade')[0];
             let scores = {};
             let assignments = document.getElementById("grades_summary").querySelectorAll(".student_assignment:not(.hard_coded):not(.dropped)");
             for(let i = 0; i<assignments.length; i++){
@@ -95,7 +97,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
                 finalTd.textContent = '0.00%';
             }
             document.getElementById("final_grade").textContent = '0.00%';
-
             let body = document.getElementById("tot_table_row");
             let finalTot = 0;
             let finalWeight = 0;
@@ -119,7 +120,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
             }
             document.getElementById("total_grade").textContent = (finalWeight).toFixed(2).toString() + '%';
             document.getElementById("final_grade").textContent = (finalTot *100/finalWeight).toFixed(2).toString() + '%';
-
         };
         det.appendChild(remBt);
     }
@@ -138,6 +138,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
     let addElemBD = document.createElement('td');
     let addElemBt= document.createElement('button');
     let dropdown = document.createElement('select');
+    let table = document.getElementsByClassName('summary');
     let opt;
 
     //configure select title input
@@ -174,7 +175,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
     //configure the Add Button
     addElemBt.id = 'addAssignment';
     addElemBt.className = 'btn';
-    addElemBt.textContent = 'Add Assignment';
+    addElemBt.textContent = '+';
     addElemBD.appendChild(addElemBt);
 
     //add All Elements to the larger Element to add to the document to allow for adding assignments
@@ -187,52 +188,127 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
 
     tb.insertBefore(addElements, tb.firstChild);
 
+    if(table.length === 0) {
+        let final_grade = document.getElementsByClassName('student_assignment final_grade');
+        $.get(chrome.runtime.getURL('/templates/table.html'), function (data) {
+            // let loc = document.getElementById("print-grades-container");
+            let loc = document.getElementById("assignments-not-weighted").children[0].children[0];
+            let cont = document.createElement("div");
+            let doc = new DOMParser().parseFromString(data, 'text/html');
+            let table = doc.getElementById("tot_table_row");
+            let finalTot = 0;
 
+            for (const [subj, vals] of Object.entries(scores)) {
+                let tempTr = document.createElement("tr");
+                let tempTh = document.createElement("th");
+                let tempInp = document.createElement("input");
+                tempInp.type = 'text';
+                tempInp.className = "catName";
+                tempInp.setAttribute('value', subj);
+                tempTh.appendChild(tempInp);
+                let tempTd = document.createElement("td");
+                let tempWeight = document.createElement("input");
+                let finalTd = document.createElement("td");
+                tempWeight.id = 'catWeight';
+                tempWeight.type = "number";
+                tempWeight.style = "max-width: 50px"
+                finalTd.id = 'catPercent';
+                let weight = (100 / Object.keys(scores).length).toFixed(2);
 
-    $.get(chrome.runtime.getURL('/templates/table.html'), function(data) {
-        let loc = document.getElementById("print-grades-container");
-        let cont = document.createElement("div");
-        let doc = new DOMParser().parseFromString(data, 'text/html');
-        let table= doc.getElementById("tot_table_row");
-        let finalTot = 0;
-
-        for (const [subj, vals] of Object.entries(scores)) {
-            let tempTr = document.createElement("tr");
-            let tempTh = document.createElement("th");
-            let tempInp = document.createElement("input");
-            tempInp.type = 'text';
-            tempInp.className="catName";
-            tempInp.setAttribute('value',subj);
-            tempTh.appendChild(tempInp);
-            let tempTd = document.createElement("td");
-            let tempWeight = document.createElement("input");
-            let finalTd = document.createElement("td");
-            tempWeight.id = 'catWeight';
-            tempWeight.type = "number";
-            tempWeight.style = "max-width: 50px"
-            finalTd.id = 'catPercent';
-            let weight = (100 / Object.keys(scores).length).toFixed(2);
-
-            let finalVals = 0;
-            if(vals[1] !== 0){
-                finalVals = vals[0] / vals[1] * 100;
+                let finalVals = 0;
+                if (vals[1] !== 0) {
+                    finalVals = vals[0] / vals[1] * 100;
+                }
+                finalTot += (finalVals / 100 * weight);
+                // tempTd.contentEditable = "true";
+                console.log(weight.toString());
+                tempWeight.setAttribute('value', weight.toString());
+                finalTd.textContent = finalVals.toFixed(2).toString() + '%';
+                tempTd.appendChild(tempWeight);
+                tempTr.appendChild(tempTh);
+                tempTr.appendChild(tempTd);
+                tempTr.appendChild(finalTd);
+                $(tempTr).insertBefore(table);
             }
-            finalTot += (finalVals / 100 * weight);
-            // tempTd.contentEditable = "true";
-            console.log(weight.toString());
-            tempWeight.setAttribute('value',weight.toString());
-            finalTd.textContent = finalVals.toFixed(2).toString() + '%';
-            tempTd.appendChild(tempWeight);
-            tempTr.appendChild(tempTh);
-            tempTr.appendChild(tempTd);
-            tempTr.appendChild(finalTd);
-            $(tempTr).insertBefore(table);
+            doc.getElementById("final_grade").textContent = finalTot.toFixed(2).toString() + '%';
+            final_grade[1].innerHTML = 'Total: ' + finalTot.toFixed(2).toString() + '%';
+            final_grade[0].getElementsByClassName('grade')[0].innerHTML = finalTot.toFixed(2).toString() + '%';
+            cont.appendChild(doc.firstChild);
+            $(cont.innerHTML).insertBefore(loc);
+            loc.remove();
+        });
+    }
+    else{
+        let final_grade = document.getElementsByClassName('student_assignment final_grade')[1];
+        console.log(final_grade);
+        let tableTr = document.getElementById('assignments-not-weighted').children[0].children[1].children[1].children;
+        let weights = {};
+        let trueWeights = {};
+        for(let i=0; i<tableTr.length-1;i++){
+            let subj = tableTr[i].children[0].textContent;
+            let perc = tableTr[i].children[1].textContent;
+            weights[subj] = perc;
         }
-        doc.getElementById("final_grade").textContent = finalTot.toFixed(2).toString() + '%';
-        cont.appendChild(doc.firstChild);
-        $(cont.innerHTML).insertBefore(loc);
-    });
+        for (const [subj, vals] of Object.entries(weights)) {
+            trueWeights[subj] = vals;
+            if(!(subj in scores)){
+                scores[subj] = [0.00,0.00];
+                trueWeights[subj] = 0;
+            }
+        }
+        $.get(chrome.runtime.getURL('/templates/table.html'), function (data) {
+            // let loc = document.getElementById("print-grades-container");
+            let loc = document.getElementById("assignments-not-weighted").children[0].children[0];
+            let cont = document.createElement("div");
+            let doc = new DOMParser().parseFromString(data, 'text/html');
+            let table = doc.getElementById("tot_table_row");
+            let finalTot = 0;
+            let finalWeight = 0;
+            for (const [subj, vals] of Object.entries(scores)) {
+                let tempTr = document.createElement("tr");
+                let tempTh = document.createElement("th");
+                let tempInp = document.createElement("input");
+                tempInp.type = 'text';
+                tempInp.className = "catName";
+                tempInp.setAttribute('value', subj);
+                tempTh.appendChild(tempInp);
+                let tempTd = document.createElement("td");
+                let tempWeight = document.createElement("input");
+                let finalTd = document.createElement("td");
+                tempWeight.id = 'catWeight';
+                tempWeight.type = "number";
+                tempWeight.style = "max-width: 50px"
+                finalTd.id = 'catPercent';
+                let weight = parseFloat(weights[subj]);
 
+                let finalVals = 0;
+                if (vals[1] !== 0) {
+                    finalVals = vals[0] / vals[1] * 100;
+                }
+                finalTot += (finalVals / 100 * weight);
+                finalWeight += parseFloat(trueWeights[subj]);
+                // tempTd.contentEditable = "true";
+                console.log(weight.toString());
+                tempWeight.setAttribute('value', weight.toString());
+                finalTd.textContent = finalVals.toFixed(2).toString() + '%';
+                tempTd.appendChild(tempWeight);
+                tempTr.appendChild(tempTh);
+                tempTr.appendChild(tempTd);
+                tempTr.appendChild(finalTd);
+                $(tempTr).insertBefore(table);
+            }
+            if(finalWeight>100){
+                finalWeight = 100;
+            }
+            doc.getElementById("final_grade").textContent = (finalTot/finalWeight *100).toFixed(2).toString() + '%';
+            final_grade.innerHTML = 'Total: ' + (finalTot/finalWeight *100).toFixed(2).toString() + '%';
+            cont.appendChild(doc.firstChild);
+            $(cont.innerHTML).insertBefore(loc);
+            loc.nextElementSibling.remove();
+            loc.remove();
+        });
+
+    }
     sendResponse({result: "success"});
 
 });
