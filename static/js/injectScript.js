@@ -1,6 +1,7 @@
 let tempCat =  '   <th><input type="text" class="catName" value="CATEGORY NAME"></th>' +
                 '   <td> <input type="number" style="max-width: 50px" id="catWeight" contenteditable="true" value="0"></td>' +
-                '   <td id="catPercent">0.00</td>';
+                // '   <td id="catPercent">0.00</td>' +
+                '';
 
 let categories = document.getElementsByClassName("catName");
 let dropdown = document.getElementById('selCategory');
@@ -97,7 +98,7 @@ $(document).on('input', '.catName', function() {
 
 function reCalc(){
     let scores = {};
-    let final_grade = document.getElementsByClassName('student_assignment final_grade')[1];
+    let final_grade = document.getElementsByClassName('student_assignment final_grade');
     let group_totals = document.getElementsByClassName('student_assignment hard_coded group_total');
     let assignments = document.getElementById("grades_summary").querySelectorAll(".student_assignment:not(.hard_coded):not(.dropped)");
     for(let i = 0; i<assignments.length; i++){
@@ -150,29 +151,34 @@ function reCalc(){
     let finalTot = 0;
     let finalWeight = 0;
     for(let i = 0; i<categories.length; i++){
-        let finalTd = $(categories[i].parentElement.parentElement).find('#catPercent')[0];
-        finalTd.textContent = '0.00%';
+        // let finalTd = $(categories[i].parentElement.parentElement).find('#catPercent')[0];
+        // finalTd.textContent = '0.00%';
     }
-    document.getElementById("final_grade").textContent = '0.00%';
+    // document.getElementById("final_grade").textContent = '0.00%';
 
     for(let i=0; i<group_totals.length; i++){
         let subj = group_totals[i].getElementsByClassName('title')[0].textContent.trim();
         console.log(subj, scores[subj]);
-        group_totals[i].getElementsByClassName('grade')[0].innerHTML = (parseFloat(scores[subj][0])/parseFloat(scores[subj][1])*100).toFixed(2).toString() + '%';
-        group_totals[i].getElementsByClassName('points_possible')[0].innerHTML = scores[subj][0] + '/' + scores[subj][1];
+        if(subj in scores) {
+            group_totals[i].getElementsByClassName('grade')[0].innerHTML = (parseFloat(scores[subj][0]) / parseFloat(scores[subj][1]) * 100).toFixed(2).toString() + '%';
+            group_totals[i].getElementsByClassName('points_possible')[0].innerHTML = parseFloat(scores[subj][0]).toFixed(2).toString() + ' / ' + parseFloat(scores[subj][1]).toFixed(2).toString();
+        }else{
+            group_totals[i].getElementsByClassName('grade')[0].innerHTML = 'N/A';
+            group_totals[i].getElementsByClassName('points_possible')[0].innerHTML = '0.00 / 0.00';
+        }
     }
     for (const [subj, vals] of Object.entries(scores)) {
         for(let i = 0; i<categories.length; i++){
             if (categories[i].value === subj){
                 let weight = parseFloat($(categories[i].parentElement.parentElement).find('#catWeight')[0].value);
-                let finalTd = $(categories[i].parentElement.parentElement).find('#catPercent')[0];
+                // let finalTd = $(categories[i].parentElement.parentElement).find('#catPercent')[0];
                 let finalVals = 0;
                 if(vals[1] !== 0){
                     finalVals = vals[0] / vals[1] * 100;
                 }
                 finalWeight += weight;
                 finalTot += (finalVals / 100 * weight);
-                finalTd.textContent = finalVals.toFixed(2).toString() + '%';
+                // finalTd.textContent = finalVals.toFixed(2).toString() + '%';
             }
             if (finalWeight > 100){
                 finalWeight = 100;
@@ -180,7 +186,7 @@ function reCalc(){
         }
     }
     document.getElementById("total_grade").textContent = (finalWeight).toFixed(2).toString() + '%';
-    document.getElementById("final_grade").textContent = (finalTot *100/finalWeight).toFixed(2).toString() + '%';
-    final_grade.innerHTML = 'Total: ' + (finalTot/finalWeight *100).toFixed(2).toString() + '%';
-
+    // document.getElementById("final_grade").textContent = (finalTot *100/finalWeight).toFixed(2).toString() + '%';
+    final_grade[0].getElementsByClassName('grade')[0].innerHTML = (finalTot/finalWeight *100).toFixed(2).toString() + '%';
+    final_grade[1].innerHTML = 'Total: ' + (finalTot/finalWeight *100).toFixed(2).toString() + '%';
 }

@@ -57,7 +57,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
             $(this).parent().parent().remove();
             let categories = document.getElementsByClassName("catName");
             let dropdown = document.getElementById('selCategory');
-            let final_grade = document.getElementsByClassName('student_assignment final_grade')[0];
+            // let final_grade = document.getElementsByClassName('student_assignment final_grade')[0];
             let scores = {};
             let assignments = document.getElementById("grades_summary").querySelectorAll(".student_assignment:not(.hard_coded):not(.dropped)");
             for(let i = 0; i<assignments.length; i++){
@@ -93,10 +93,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
                 }
             }
             for(let i = 0; i<categories.length; i++){
-                let finalTd = $(categories[i].parentElement.parentElement).find('#catPercent')[0];
-                finalTd.textContent = '0.00%';
+                // let finalTd = $(categories[i].parentElement.parentElement).find('#catPercent')[0];
+                // finalTd.textContent = '0.00%';
             }
-            document.getElementById("final_grade").textContent = '0.00%';
+            // document.getElementById("final_grade").textContent = '0.00%';
             let body = document.getElementById("tot_table_row");
             let finalTot = 0;
             let finalWeight = 0;
@@ -104,14 +104,14 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
                 for(let i = 0; i<categories.length; i++){
                     if (categories[i].value === subj){
                         let weight = parseFloat($(categories[i].parentElement.parentElement).find('#catWeight')[0].textContent);
-                        let finalTd = $(categories[i].parentElement.parentElement).find('#catPercent')[0];
+                        // let finalTd = $(categories[i].parentElement.parentElement).find('#catPercent')[0];
                         let finalVals = 0;
                         if(vals[1] !== 0){
                             finalVals = vals[0] / vals[1] * 100;
                         }
                         finalWeight += weight;
                         finalTot += (finalVals / 100 * weight);
-                        finalTd.textContent = finalVals.toFixed(2).toString() + '%';
+                        // finalTd.textContent = finalVals.toFixed(2).toString() + '%';
                     }
                 }
             }
@@ -119,7 +119,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
                 finalWeight = 100;
             }
             document.getElementById("total_grade").textContent = (finalWeight).toFixed(2).toString() + '%';
-            document.getElementById("final_grade").textContent = (finalTot *100/finalWeight).toFixed(2).toString() + '%';
+            // document.getElementById("final_grade").textContent = (finalTot *100/finalWeight).toFixed(2).toString() + '%';
         };
         det.appendChild(remBt);
     }
@@ -190,6 +190,14 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
 
     if(table.length === 0) {
         let final_grade = document.getElementsByClassName('student_assignment final_grade');
+        let categories = document.getElementsByClassName('catName');
+        let group_totals = document.getElementsByClassName('student_assignment hard_coded group_total');
+        for(let i=0; i<group_totals.length; i++){
+            let s = group_totals[i].getElementsByClassName('title')[0].textContent.trim();
+            if(!(s in scores)){
+                scores[s] = [0.00,0.00];
+            }
+        }
         $.get(chrome.runtime.getURL('/templates/table.html'), function (data) {
             // let loc = document.getElementById("print-grades-container");
             let loc = document.getElementById("assignments-not-weighted").children[0].children[0];
@@ -197,8 +205,15 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
             let doc = new DOMParser().parseFromString(data, 'text/html');
             let table = doc.getElementById("tot_table_row");
             let finalTot = 0;
+            let dropdown = document.getElementById('selCategory');
+            $(dropdown).empty();
 
             for (const [subj, vals] of Object.entries(scores)) {
+                let name = subj;
+                let opt = document.createElement('option');
+                opt.textContent=name;
+                opt.value=name;
+                dropdown.appendChild(opt);
                 let tempTr = document.createElement("tr");
                 let tempTh = document.createElement("th");
                 let tempInp = document.createElement("input");
@@ -208,11 +223,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
                 tempTh.appendChild(tempInp);
                 let tempTd = document.createElement("td");
                 let tempWeight = document.createElement("input");
-                let finalTd = document.createElement("td");
+                // let finalTd = document.createElement("td");
                 tempWeight.id = 'catWeight';
                 tempWeight.type = "number";
-                tempWeight.style = "max-width: 50px"
-                finalTd.id = 'catPercent';
+                tempWeight.style = "max-width: 50px";
+                // finalTd.id = 'catPercent';
                 let weight = (100 / Object.keys(scores).length).toFixed(2);
 
                 let finalVals = 0;
@@ -223,14 +238,14 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
                 // tempTd.contentEditable = "true";
                 console.log(weight.toString());
                 tempWeight.setAttribute('value', weight.toString());
-                finalTd.textContent = finalVals.toFixed(2).toString() + '%';
+                // finalTd.textContent = finalVals.toFixed(2).toString() + '%';
                 tempTd.appendChild(tempWeight);
                 tempTr.appendChild(tempTh);
                 tempTr.appendChild(tempTd);
-                tempTr.appendChild(finalTd);
+                // tempTr.appendChild(finalTd);
                 $(tempTr).insertBefore(table);
             }
-            doc.getElementById("final_grade").textContent = finalTot.toFixed(2).toString() + '%';
+            // doc.getElementById("final_grade").textContent = finalTot.toFixed(2).toString() + '%';
             final_grade[1].innerHTML = 'Total: ' + finalTot.toFixed(2).toString() + '%';
             final_grade[0].getElementsByClassName('grade')[0].innerHTML = finalTot.toFixed(2).toString() + '%';
             cont.appendChild(doc.firstChild);
@@ -239,7 +254,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
         });
     }
     else{
-        let final_grade = document.getElementsByClassName('student_assignment final_grade')[1];
+        let final_grade = document.getElementsByClassName('student_assignment final_grade');
         console.log(final_grade);
         let tableTr = document.getElementById('assignments-not-weighted').children[0].children[1].children[1].children;
         let weights = {};
@@ -274,11 +289,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
                 tempTh.appendChild(tempInp);
                 let tempTd = document.createElement("td");
                 let tempWeight = document.createElement("input");
-                let finalTd = document.createElement("td");
+                // let finalTd = document.createElement("td");
                 tempWeight.id = 'catWeight';
                 tempWeight.type = "number";
                 tempWeight.style = "max-width: 50px"
-                finalTd.id = 'catPercent';
+                // finalTd.id = 'catPercent';
                 let weight = parseFloat(weights[subj]);
 
                 let finalVals = 0;
@@ -290,18 +305,19 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
                 // tempTd.contentEditable = "true";
                 console.log(weight.toString());
                 tempWeight.setAttribute('value', weight.toString());
-                finalTd.textContent = finalVals.toFixed(2).toString() + '%';
+                // finalTd.textContent = finalVals.toFixed(2).toString() + '%';
                 tempTd.appendChild(tempWeight);
                 tempTr.appendChild(tempTh);
                 tempTr.appendChild(tempTd);
-                tempTr.appendChild(finalTd);
+                // tempTr.appendChild(finalTd);
                 $(tempTr).insertBefore(table);
             }
             if(finalWeight>100){
                 finalWeight = 100;
             }
-            doc.getElementById("final_grade").textContent = (finalTot/finalWeight *100).toFixed(2).toString() + '%';
-            final_grade.innerHTML = 'Total: ' + (finalTot/finalWeight *100).toFixed(2).toString() + '%';
+            // doc.getElementById("final_grade").textContent = (finalTot/finalWeight *100).toFixed(2).toString() + '%';
+            final_grade[0].getElementsByClassName('grade')[0].innerHTML = (finalTot/finalWeight *100).toFixed(2).toString() + '%';
+            final_grade[1].innerHTML = 'Total: ' + (finalTot/finalWeight *100).toFixed(2).toString() + '%';
             cont.appendChild(doc.firstChild);
             $(cont.innerHTML).insertBefore(loc);
             loc.nextElementSibling.remove();
