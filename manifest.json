@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "Canvas Grade Calculator",
-  "description": "This extension will increase the number of features in calculating grades on canvas",
+  "description": "This extension will increase the number of features in calculating grades on the Canvas Interface",
   "version": "1.1",
   "content_scripts": [
     {
