@@ -290,12 +290,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
                 }
                 // doc.getElementById("final_grade").textContent = finalTot.toFixed(2).toString() + '%';
                 if(final_grade.length === 2) {
-                    final_grade[0].getElementsByClassName('grade')[0].innerHTML = (finalTot / finalWeight * 100).toFixed(2).toString() + '%';
-                    final_grade[1].innerHTML = 'Total: ' + (finalTot / finalWeight * 100).toFixed(2).toString() + '%';
+                    final_grade[0].getElementsByClassName('grade')[0].innerHTML = finalTot.toFixed(2).toString() + '%';
+                    final_grade[1].innerHTML = 'Total: ' + finalTot.toFixed(2).toString() + '%';
                 }else{
-                    final_grade[0].innerHTML = 'Total: ' + (finalTot / finalWeight * 100).toFixed(2).toString() + '%';
-                }
-                cont.appendChild(doc.firstChild);
+                    final_grade[0].innerHTML = 'Total: ' + finalTot.toFixed(2).toString() + '%';
+                }cont.appendChild(doc.firstChild);
                 $(cont.innerHTML).insertBefore(loc);
                 loc.remove();
             });
