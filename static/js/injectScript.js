@@ -96,97 +96,99 @@ $(document).on('input', '.catName', function() {
     }
 });
 
-function reCalc(){
+function reCalc() {
     let scores = {};
     let final_grade = document.getElementsByClassName('student_assignment final_grade');
     let group_totals = document.getElementsByClassName('student_assignment hard_coded group_total');
     let assignments = document.getElementById("grades_summary").querySelectorAll(".student_assignment:not(.hard_coded):not(.dropped)");
-    for(let i = 0; i<assignments.length; i++){
+    for (let i = 0; i < assignments.length; i++) {
         let subj = assignments[i].getElementsByClassName("context")[0].textContent;
         let score = assignments[i].getElementsByClassName("original_points")[0].textContent;
-        if ($(assignments[i].getElementsByClassName("assignment_score")).find(".what_if_score").length > 0){
+        if ($(assignments[i].getElementsByClassName("assignment_score")).find(".what_if_score").length > 0) {
             score = assignments[i].getElementsByClassName("what_if_score")[0].textContent;
         }
-        if (isNaN(parseFloat(score))){
+        if (isNaN(parseFloat(score))) {
             score = '0';
         }
         let possible = assignments[i].getElementsByClassName("points_possible")[0].textContent;
-        if (isNaN(parseFloat(possible))){
+        if (isNaN(parseFloat(possible))) {
             possible = '0';
         }
-        if(subj in scores){
+        if (subj in scores) {
             if ($(assignments[i].getElementsByClassName("assignment_score")).find(".icon-off").length === 0) {
                 scores[subj][0] += parseFloat(score);
                 scores[subj][1] += parseFloat(possible);
-            }
-            else{
+            } else {
                 scores[subj][0] += 0;
                 scores[subj][1] += 0;
             }
-        }
-        else {
+        } else {
             if ($(assignments[i].getElementsByClassName("assignment_score")).find(".icon-off").length === 0) {
                 scores[subj] = [parseFloat(score), parseFloat(possible)];
-            }
-            else{
-                scores[subj] = [0.00,0.00];
+            } else {
+                scores[subj] = [0.00, 0.00];
             }
         }
     }
     let tableTr = document.getElementById('assignments-not-weighted').children[0].getElementsByClassName('show_grades')[0].children[1].children;
     let weights = {};
     let trueWeights = {};
-    for(let i=0; i<tableTr.length-1;i++){
+    for (let i = 0; i < tableTr.length - 1; i++) {
         let subj = tableTr[i].children[0].children[0].textContent;
         let perc = tableTr[i].children[1].children[0].textContent;
         weights[subj] = perc;
     }
     for (const [subj, vals] of Object.entries(weights)) {
         trueWeights[subj] = vals;
-        if(!(subj in scores)){
-            scores[subj] = [0.00,0.00];
+        if (!(subj in scores)) {
+            scores[subj] = [0.00, 0.00];
             trueWeights[subj] = 0;
         }
     }
     let finalTot = 0;
     let finalWeight = 0;
-    for(let i = 0; i<categories.length; i++){
+    for (let i = 0; i < categories.length; i++) {
         // let finalTd = $(categories[i].parentElement.parentElement).find('#catPercent')[0];
         // finalTd.textContent = '0.00%';
     }
     // document.getElementById("final_grade").textContent = '0.00%';
 
-    for(let i=0; i<group_totals.length; i++){
+    for (let i = 0; i < group_totals.length; i++) {
         let subj = group_totals[i].getElementsByClassName('title')[0].textContent.trim();
         console.log(subj, scores[subj]);
-        if(subj in scores) {
+        if (subj in scores) {
             group_totals[i].getElementsByClassName('grade')[0].innerHTML = (parseFloat(scores[subj][0]) / parseFloat(scores[subj][1]) * 100).toFixed(2).toString() + '%';
             group_totals[i].getElementsByClassName('points_possible')[0].innerHTML = parseFloat(scores[subj][0]).toFixed(2).toString() + ' / ' + parseFloat(scores[subj][1]).toFixed(2).toString();
-        }else{
+        } else {
             group_totals[i].getElementsByClassName('grade')[0].innerHTML = 'N/A';
             group_totals[i].getElementsByClassName('points_possible')[0].innerHTML = '0.00 / 0.00';
         }
     }
     for (const [subj, vals] of Object.entries(scores)) {
-        for(let i = 0; i<categories.length; i++){
-            if (categories[i].value === subj){
+        for (let i = 0; i < categories.length; i++) {
+            if (categories[i].value === subj) {
                 let weight = parseFloat($(categories[i].parentElement.parentElement).find('#catWeight')[0].value);
                 // let finalTd = $(categories[i].parentElement.parentElement).find('#catPercent')[0];
                 let finalVals = 0;
-                if(vals[1] !== 0){
+                if (vals[1] !== 0) {
                     finalVals = vals[0] / vals[1] * 100;
                 }
                 finalWeight += weight;
                 finalTot += (finalVals / 100 * weight);
                 // finalTd.textContent = finalVals.toFixed(2).toString() + '%';
             }
-            if (finalWeight > 100){
+            if (finalWeight > 100) {
                 finalWeight = 100;
             }
         }
     }
     document.getElementById("total_grade").textContent = (finalWeight).toFixed(2).toString() + '%';
     // document.getElementById("final_grade").textContent = (finalTot *100/finalWeight).toFixed(2).toString() + '%';
-    final_grade[0].getElementsByClassName('grade')[0].innerHTML = (finalTot/finalWeight *100).toFixed(2).toString() + '%';
-    final_grade[1].innerHTML = 'Total: ' + (finalTot/finalWeight *100).toFixed(2).toString() + '%';
+    if (final_grade.length === 2) {
+        final_grade[0].getElementsByClassName('grade')[0].innerHTML = (finalTot / finalWeight * 100).toFixed(2).toString() + '%';
+        final_grade[1].innerHTML = 'Total: ' + (finalTot / finalWeight * 100).toFixed(2).toString() + '%';
+    }
+    else {
+        final_grade[0].innerHTML = 'Total: ' + (finalTot / finalWeight * 100).toFixed(2).toString() + '%';
+    }
 }
