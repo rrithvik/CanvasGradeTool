@@ -102,31 +102,33 @@ function reCalc() {
     let group_totals = document.getElementsByClassName('student_assignment hard_coded group_total');
     let assignments = document.getElementById("grades_summary").querySelectorAll(".student_assignment:not(.hard_coded):not(.dropped)");
     for (let i = 0; i < assignments.length; i++) {
-        let subj = assignments[i].getElementsByClassName("context")[0].textContent;
-        let score = assignments[i].getElementsByClassName("original_points")[0].textContent;
-        if ($(assignments[i].getElementsByClassName("assignment_score")).find(".what_if_score").length > 0) {
-            score = assignments[i].getElementsByClassName("what_if_score")[0].textContent;
-        }
-        if (isNaN(parseFloat(score))) {
-            score = '0';
-        }
-        let possible = assignments[i].getElementsByClassName("points_possible")[0].textContent;
-        if (isNaN(parseFloat(possible))) {
-            possible = '0';
-        }
-        if (subj in scores) {
-            if ($(assignments[i].getElementsByClassName("assignment_score")).find(".icon-off").length === 0) {
-                scores[subj][0] += parseFloat(score);
-                scores[subj][1] += parseFloat(possible);
-            } else {
-                scores[subj][0] += 0;
-                scores[subj][1] += 0;
+        if(assignments[i].getElementsByClassName("submission_status")[0].textContent.trim() === 'graded' || (assignments[i].getElementsByClassName("submission_status")[0].textContent.trim() === 'graded' && assignments[i].getElementsByClassName("submission_icon icon-quiz").length === 0) ){
+            let subj = assignments[i].getElementsByClassName("context")[0].textContent;
+            let score = assignments[i].getElementsByClassName("original_points")[0].textContent;
+            if ($(assignments[i].getElementsByClassName("assignment_score")).find(".what_if_score").length > 0) {
+                score = assignments[i].getElementsByClassName("what_if_score")[0].textContent;
             }
-        } else {
-            if ($(assignments[i].getElementsByClassName("assignment_score")).find(".icon-off").length === 0) {
-                scores[subj] = [parseFloat(score), parseFloat(possible)];
+            if (isNaN(parseFloat(score))) {
+                score = '0';
+            }
+            let possible = assignments[i].getElementsByClassName("points_possible")[0].textContent;
+            if (isNaN(parseFloat(possible))) {
+                possible = '0';
+            }
+            if (subj in scores) {
+                if ($(assignments[i].getElementsByClassName("assignment_score")).find(".icon-off").length === 0) {
+                    scores[subj][0] += parseFloat(score);
+                    scores[subj][1] += parseFloat(possible);
+                } else {
+                    scores[subj][0] += 0;
+                    scores[subj][1] += 0;
+                }
             } else {
-                scores[subj] = [0.00, 0.00];
+                if ($(assignments[i].getElementsByClassName("assignment_score")).find(".icon-off").length === 0) {
+                    scores[subj] = [parseFloat(score), parseFloat(possible)];
+                } else {
+                    scores[subj] = [0.00, 0.00];
+                }
             }
         }
     }
@@ -177,9 +179,9 @@ function reCalc() {
                 finalTot += (finalVals / 100 * weight);
                 // finalTd.textContent = finalVals.toFixed(2).toString() + '%';
             }
-            if (finalWeight > 100) {
-                finalWeight = 100;
-            }
+        }
+        if (finalWeight > 100) {
+            finalWeight = 100;
         }
     }
     document.getElementById("total_grade").textContent = (finalWeight).toFixed(2).toString() + '%';
