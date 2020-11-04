@@ -66,8 +66,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
         let final_grade = document.getElementsByClassName('student_assignment final_grade')[0];
         let assignments = document.getElementById("grades_summary").querySelectorAll(".student_assignment:not(.hard_coded):not(.dropped)");
         for (let i = 0; i < assignments.length; i++) {
-            if(assignments[i].getElementsByClassName("submission_status")[0].textContent.trim() === 'graded' || (assignments[i].getElementsByClassName("submission_status")[0].textContent.trim() === 'graded' && assignments[i].getElementsByClassName("submission_icon icon-quiz").length === 0) ){
-
+            if(assignments[i].getElementsByClassName("submission_status")[0].textContent.trim() === 'graded' || (assignments[i].getElementsByClassName("submission_status")[0].textContent.trim() === 'pending_review' && assignments[i].getElementsByClassName("submission_icon icon-quiz").length === 0) ){
                 let subj = assignments[i].getElementsByClassName("context")[0].textContent;
                 let score = assignments[i].getElementsByClassName("original_points")[0].textContent;
                 if ($(assignments[i].getElementsByClassName("assignment_score")).find(".what_if_score").length > 0) {
@@ -109,7 +108,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
                 let scores = {};
                 let assignments = document.getElementById("grades_summary").querySelectorAll(".student_assignment:not(.hard_coded):not(.dropped)");
                 for (let i = 0; i < assignments.length; i++) {
-                    if(assignments[i].getElementsByClassName("submission_status")[0].textContent.trim() === 'graded' || (assignments[i].getElementsByClassName("submission_status")[0].textContent.trim() === 'graded' && assignments[i].getElementsByClassName("submission_icon icon-quiz").length === 0) ){
+                    if(assignments[i].getElementsByClassName("submission_status")[0].textContent.trim() === 'graded' || (assignments[i].getElementsByClassName("submission_status")[0].textContent.trim() === 'pending_review' && assignments[i].getElementsByClassName("submission_icon icon-quiz").length === 0) ){
                         let subj = assignments[i].getElementsByClassName("context")[0].textContent;
                         let score = assignments[i].getElementsByClassName("original_points")[0].textContent;
                         if ($(assignments[i].getElementsByClassName("assignment_score")).find(".what_if_score").length > 0) {
