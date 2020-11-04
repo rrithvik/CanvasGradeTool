@@ -42,10 +42,14 @@ $("#addAssignment").on('click', function() {
     aScoreD2.style = 'display: none;';
     let aScoreS3 = document.createElement('span');
     aScoreS3.className = 'original_points';
+    let aScoreStatus = document.createElement('span');
+    aScoreStatus.className = 'submission_status';
+    aScoreStatus.textContent = 'graded';
     aScoreS3.textContent = document.getElementById('selScore').value;
     aScoreS1.appendChild(aScoreS2);
     aScoreD1.appendChild(aScoreS1);
     aScoreD2.appendChild(aScoreS3);
+    aScoreD2.appendChild(aScoreStatus);
     aScoreD1.appendChild(aScoreD2);
     aScoreDiv.appendChild(aScoreD1);
     tempTr.appendChild(aScoreDiv);
@@ -102,7 +106,7 @@ function reCalc() {
     let group_totals = document.getElementsByClassName('student_assignment hard_coded group_total');
     let assignments = document.getElementById("grades_summary").querySelectorAll(".student_assignment:not(.hard_coded):not(.dropped)");
     for (let i = 0; i < assignments.length; i++) {
-        if(assignments[i].getElementsByClassName("submission_status")[0].textContent.trim() === 'graded' || (assignments[i].getElementsByClassName("submission_status")[0].textContent.trim() === 'graded' && assignments[i].getElementsByClassName("submission_icon icon-quiz").length === 0) ){
+        if((assignments[i].getElementsByClassName("submission_status")[0].textContent.trim()) === 'graded' || (assignments[i].getElementsByClassName("submission_status")[0].textContent.trim() === 'pending_review' && assignments[i].getElementsByClassName("submission_icon icon-quiz").length === 0) ){
             let subj = assignments[i].getElementsByClassName("context")[0].textContent;
             let score = assignments[i].getElementsByClassName("original_points")[0].textContent;
             if ($(assignments[i].getElementsByClassName("assignment_score")).find(".what_if_score").length > 0) {
