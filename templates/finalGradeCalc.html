@@ -1,0 +1,66 @@
+<div>
+    <div>
+        <h1>Final Grade Calculator</h1>
+        <h5 style="color: red">***Will calculate based on current grades. Any categories with no assignments will be ignored***</h5>
+        <table style="padding-bottom: 3%" id="final_grade_calc" class="final_grade_calc">
+            <thead>
+            <tr>
+                <td scope="col">Desired Grade (%)</td>
+                <td scope="col">Weight of Final (%)</td>
+                <td scope="col">Calculate</td>
+            </tr>
+            </thead>
+            <tbody id="final_grade_calc_body">
+            <tr style="font-weight: bold;">
+                <td>
+                    <input type="text" id="desired_grade" value="93">
+                </td>
+                <td>
+                    <input type="text" id="final_weight" value="20">
+                </td>
+                <td>
+                    <button class="btn btn-primary" type="button" id="calculate_final">Calculate</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div id="req_final_grade" style="display: none">
+            <h1>Required Grade On Final: <div id="req_grade">0%</div></h1>
+        </div>
+    </div>
+    <script>
+        $("#calculate_final").on('click', function() {
+            reCalc();
+            let currWeight = document.getElementById("total_grade").innerHTML;
+            currWeight = currWeight.substring(0,currWeight.length-1);
+            let desGrade = document.getElementById('desired_grade').value;
+            let finWeight = document.getElementById('final_weight').value;
+            let reqGrade = document.getElementById("req_grade");
+            let currGrade = document.getElementsByClassName('student_assignment final_grade');
+            console.log(currWeight + '' + currGrade.length);
+            console.log(currGrade[1].innerHTML.trim());
+            if(currGrade.length === 2) {
+                currGrade = currGrade[1].innerHTML.trim();
+                currGrade = currGrade.substring(7, currGrade.length - 1);
+            }
+            else {
+                currGrade = currGrade[0].innerHTML.trim();
+                currGrade = currGrade.substring(7, currGrade.length - 1);
+            }
+            let weightedCurr = parseFloat(currWeight) * parseFloat(currGrade);
+            console.log(currGrade);
+            console.log("curr: " + weightedCurr);
+            let finGrade = parseFloat(desGrade) * (parseFloat(currWeight) + parseFloat(finWeight)) - weightedCurr;
+            console.log("fin: " + finGrade);
+            finGrade = (finGrade/parseFloat(finWeight)).toFixed(2);
+            if(finGrade < -1000){
+                finGrade = '<h5 style="font-max-size: small; color: red">Please Make Sure All Fields Are Inputted Correctly</h5>';
+            }
+            else{
+                finGrade = finGrade.toString() + '%';
+            }
+            reqGrade.innerHTML = finGrade;
+            $("#req_final_grade").show();
+        });
+    </script>
+</div>
