@@ -3,23 +3,34 @@
 <head>
     <style>
         button {
-            height: 30px;
-            width: 70px;
+            height: 50px;
+            width: 150px;
             outline: none;
         }
     </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
 </head>
 <body>
-    <button type="button" id="calculate">Calculate</button>
-    <div style="padding-top: 10px;padding-bottom: 10px"></div>
-    <select id="themeSelect">
+    <div style="padding: 10px;">
+        <button class="btn btn-primary btn-sm" type="button" id="calculate">Calculate</button>
+    </div>
+    <div style="padding: 10px">
+    <select class="form-control-sm" id="themeSelect">
         <option selected disabled>Select a Theme</option>
         <option value="light">Light</option>
         <option value="dark">Dark</option>
         <option value="inverted">Inverted</option>
         <option value="dark-glow">Dark Glow</option>
         <option value="bnw">Black and White</option>
+        <option value="dark-future">Dark Future</option>
+        <option value="hot-pink">Hot Pink</option>
+<!--        <option value="purple">Purple</option>-->
     </select>
+    </div>
     <script src="../static/js/popup.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 </html>

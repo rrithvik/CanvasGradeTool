@@ -12,7 +12,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
         document.body.style = "";
         sendResponse({result: "success"});
     }else if(request.command === 'dark'){
-        document.body.style = "background: rgb(0, 0, 0); color: rgb(0, 0, 0); filter: invert(100%) hue-rotate(180deg);";
+        document.body.style = "" +
+            "background: rgb(0, 0, 0); " +
+            "color: rgb(0, 0, 255); " +
+            "filter: invert(100%) hue-rotate(180deg);";
         sendResponse({result: "success"});
     }
     else if(request.command === 'inverted'){
@@ -33,29 +36,30 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
         sendResponse({result: "success"});
     }
     else if(request.command === 'bnw'){
+        document.body.style = "filter: grayscale(100%);\n";
+        sendResponse({result: "success"});
+    }
+    else if(request.command === 'hot-pink'){
         document.body.style = "" +
-            "    filter: grayscale(100%);\n" +
-            "\n";
+            "background: rgb(0, 0, 0); " +
+            "color: rgb(0, 0, 0); " +
+            "filter: invert(100%) hue-rotate(270deg) drop-shadow(16px 16px 50px purple);";
+        sendResponse({result: "success"});
+    }
+    else if(request.command === 'dark-future'){
+        document.body.style = "" +
+            "background: rgb(0, 0, 0); " +
+            "color: rgb(0, 0, 255); " +
+            "filter: invert(100%) hue-rotate(180deg) drop-shadow(16px 16px 50px blue);";
+        sendResponse({result: "success"});
+    }
+    else if(request.command === 'purple'){
+        document.body.style = "filter: hue-rotate(45deg);\n";
         sendResponse({result: "success"});
     }
 
 
     if(request.command === 'clicked') {
-        // div {
-        //     background:#000;color: #f00;
-        //     -webkit-filter: invert(100%);
-        //     filter: invert(100%);
-        //
-        // }a {
-        //
-        //     -webkit-filter: invert(100%);
-        //     filter: invert(100%);
-        //
-        // }.ic-app-header__logomark-container {
-        //     background:#fff;color:#f00;-webkit-filter: invert(100%);
-        //     filter: invert(100%);
-        //
-        // }
         let s = document.createElement('script');
         s.src = chrome.runtime.getURL('/static/js/injectScript.js');
         s.onload = function () {
@@ -63,7 +67,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
         };
         (document.head || document.documentElement).appendChild(s);
         let scores = {};
-        let final_grade = document.getElementsByClassName('student_assignment final_grade')[0];
         let assignments = document.getElementById("grades_summary").querySelectorAll(".student_assignment:not(.hard_coded):not(.dropped)");
         for (let i = 0; i < assignments.length; i++) {
             if(assignments[i].getElementsByClassName("submission_status")[0].textContent.trim() === 'graded' || (assignments[i].getElementsByClassName("submission_status")[0].textContent.trim() === 'pending_review' && assignments[i].getElementsByClassName("submission_icon icon-quiz").length === 0) ){
@@ -99,7 +102,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
             $(det).empty();
             let remBt = document.createElement('button');
             remBt.textContent = 'X';
-            remBt.className = 'remBt';
+            remBt.className = 'btn remBt';
             remBt.onclick = function () {
                 $(this).parent().parent().remove();
                 let categories = document.getElementsByClassName("catName");
@@ -149,7 +152,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
                 for (const [subj, vals] of Object.entries(scores)) {
                     for (let i = 0; i < categories.length; i++) {
                         if (categories[i].value === subj) {
-                            let weight = parseFloat($(categories[i].parentElement.parentElement).find('#catWeight')[0].textContent);
+                            let weight = parseFloat($(categories[i].parentElement.parentElement).find('.catWeight')[0].textContent);
                             // let finalTd = $(categories[i].parentElement.parentElement).find('#catPercent')[0];
                             let finalVals = 0;
                             if (vals[1] !== 0) {
@@ -196,7 +199,13 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
 
         dropdown.id = 'selCategory';
         //add dropdown to select category tr tag
-        for (const [subj, vals] of Object.entries(scores)) {
+        let ddtableTr = document.getElementById('assignments-not-weighted').children[0].children[1].children[1].children;
+        let ddweights= {};
+        for (let i = 0; i < ddtableTr.length - 1; i++) {
+            let subj = ddtableTr[i].children[0].textContent;
+            ddweights[subj] = ddtableTr[i].children[1].textContent;
+        }
+        for (const [subj, vals] of Object.entries(ddweights)) {
             opt = document.createElement('option');
             opt.value = subj;
             opt.textContent = subj;
@@ -264,18 +273,18 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
                     let tempTh = document.createElement("th");
                     let tempInp = document.createElement("input");
                     tempInp.type = 'text';
+                    tempInp.style = 'width: fit-content';
                     tempInp.className = "catName";
                     tempInp.setAttribute('value', subj);
                     tempTh.appendChild(tempInp);
                     let tempTd = document.createElement("td");
                     let tempWeight = document.createElement("input");
                     // let finalTd = document.createElement("td");
-                    tempWeight.id = 'catWeight';
+                    tempWeight.className = 'catWeight';
                     tempWeight.type = "number";
                     tempWeight.style = "max-width: 50px";
                     // finalTd.id = 'catPercent';
                     let weight = (100 / Object.keys(scores).length).toFixed(2);
-
                     let finalVals = 0;
                     if (vals[1] !== 0) {
                         finalVals = vals[0] / vals[1] * 100;
@@ -291,6 +300,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
                     // tempTr.appendChild(finalTd);
                     $(tempTr).insertBefore(table);
                 }
+                document.getElementById("total_grade").textContent = (0).toFixed(2).toString() + '%';
                 // doc.getElementById("final_grade").textContent = finalTot.toFixed(2).toString() + '%';
                 if(final_grade.length === 2) {
                     final_grade[0].getElementsByClassName('grade')[0].innerHTML = finalTot.toFixed(2).toString() + '%';
@@ -301,9 +311,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
                 $(cont.innerHTML).insertBefore(loc);
                 loc.remove();
             });
-        } else {
+        }
+        else {
             let final_grade = document.getElementsByClassName('student_assignment final_grade');
-            console.log(final_grade);
             let tableTr = document.getElementById('assignments-not-weighted').children[0].children[1].children[1].children;
             let weights = {};
             let trueWeights = {};
@@ -332,13 +342,14 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
                     let tempTh = document.createElement("th");
                     let tempInp = document.createElement("input");
                     tempInp.type = 'text';
+                    tempInp.style = "width: fit-content";
                     tempInp.className = "catName";
                     tempInp.setAttribute('value', subj);
                     tempTh.appendChild(tempInp);
                     let tempTd = document.createElement("td");
                     let tempWeight = document.createElement("input");
                     // let finalTd = document.createElement("td");
-                    tempWeight.id = 'catWeight';
+                    tempWeight.className = 'catWeight';
                     tempWeight.type = "number";
                     tempWeight.style = "max-width: 50px"
                     // finalTd.id = 'catPercent';
@@ -360,10 +371,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
                     // tempTr.appendChild(finalTd);
                     $(tempTr).insertBefore(table);
                 }
+                doc.getElementById("total_grade").textContent = (finalWeight).toFixed(2).toString() + '%';
                 if (finalWeight > 100) {
                     finalWeight = 100;
                 }
-                // doc.getElementById("final_grade").textContent = (finalTot/finalWeight *100).toFixed(2).toString() + '%';
                 if(final_grade.length === 2) {
                     final_grade[0].getElementsByClassName('grade')[0].innerHTML = (finalTot / finalWeight * 100).toFixed(2).toString() + '%';
                     final_grade[1].innerHTML = 'Total: ' + (finalTot / finalWeight * 100).toFixed(2).toString() + '%';
@@ -378,6 +389,15 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
 
         }
         sendResponse({result: "success"});
+
+        $.get(chrome.runtime.getURL('/templates/finalGradeCalc.html'), function(data) {
+            let loc = document.getElementById("print-grades-container");
+            let cont = document.createElement("div");
+            let doc = new DOMParser().parseFromString(data, 'text/html');
+
+            cont.appendChild(doc.firstChild);
+            $(cont.innerHTML).insertBefore(loc);
+        });
     }
 
 });

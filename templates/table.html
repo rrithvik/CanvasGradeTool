@@ -5,11 +5,11 @@
             <button class="btn" type="button" id="addCatBt">Add Category</button>
 
         </div>
-        <table id="grade_weights_table" class="show_grades summary">
+        <table style="width: 100%" id="grade_weights_table" class="show_grades summary">
             <thead>
                 <tr>
                     <th scope="col">Group</th>
-                    <th scope="col">Weight (%)</th>
+                    <td scope="col">Weight (%)</td>
 <!--                    <th scope="col">Score</th>-->
                 </tr>
             </thead>
@@ -26,11 +26,82 @@
         </div>
     </div>
     <script>
+        let tableTr = document.getElementById('table_grade_body').getElementsByTagName('tr');
+        for (let i = 0; i < tableTr.length - 1; i++) {
+            let remDiv = document.createElement('div');
+            remDiv.style = "color:red";
+            remDiv.className = "remCategory";
+            remDiv.innerHTML = "X";
+            $(remDiv).insertBefore(tableTr[i]);
+        }
+
+
+        $(".remCategory").on('click', function() {
+            this.nextElementSibling.remove();
+            this.remove();
+            $(dropdown).empty();
+            for(let i = 0; i<categories.length; i++){
+                let name = categories[i].value;
+                let opt = document.createElement('option');
+                opt.textContent=name;
+                opt.value=name;
+                dropdown.appendChild(opt);
+            }
+            let tableTr = document.getElementById('table_grade_body').getElementsByTagName('tr');
+            let weights = {};
+            for(let i=0; i<tableTr.length-1;i++){
+                let subj = tableTr[i].children[0].children[0].value;
+                let perc = tableTr[i].children[1].children[0].value;
+                weights[subj] = perc;
+            }
+            let group_totals = document.getElementsByClassName('student_assignment hard_coded group_total');
+            console.log(weights);
+            for(let i = 0; i<group_totals.length; i++){
+                let subj = group_totals[i].children[0].textContent.trim();
+                if(!(subj in weights)){
+                    group_totals[i].remove();
+                }
+            }
+            reCalc();
+        });
         $("#addCatBt").on('click', function() {
             let body = document.getElementById("table_grade_body");
             let ttr = document.getElementById("tot_table_row");
             let temp = document.createElement('tr');
             temp.innerHTML = tempCat;
+            let remDiv = document.createElement('div');
+            remDiv.style = "color:red";
+            remDiv.className = "remCategory";
+            remDiv.onclick = function () {
+                this.nextElementSibling.remove();
+                this.remove();
+                $(dropdown).empty();
+                for(let i = 0; i<categories.length; i++){
+                let name = categories[i].value;
+                let opt = document.createElement('option');
+                opt.textContent=name;
+                opt.value=name;
+                dropdown.appendChild(opt);
+            }
+            let tableTr = document.getElementById('table_grade_body').getElementsByTagName('tr');
+            let weights = {};
+            for(let i=0; i<tableTr.length-1;i++){
+                let subj = tableTr[i].children[0].children[0].value;
+                let perc = tableTr[i].children[1].children[0].value;
+                weights[subj] = perc;
+            }
+            let group_totals = document.getElementsByClassName('student_assignment hard_coded group_total');
+            console.log(weights);
+            for(let i = 0; i<group_totals.length; i++){
+                let subj = group_totals[i].children[0].textContent.trim();
+                if(!(subj in weights)){
+                    group_totals[i].remove();
+                }
+            }
+            reCalc();
+            };
+            remDiv.innerHTML = "X";
+            $(remDiv).insertBefore(ttr);
             body.insertBefore(temp, ttr);
 
             $(dropdown).empty();

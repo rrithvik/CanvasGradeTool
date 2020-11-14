@@ -1,12 +1,11 @@
-let tempCat =  '   <th><input type="text" class="catName" value="CATEGORY NAME"></th>' +
-                '   <td> <input type="number" style="max-width: 50px" id="catWeight" contenteditable="true" value="0"></td>' +
+let tempCat =  '   <th><input type="text" style="width: fit-content" class="catName" value="CATEGORY NAME"></th>' +
+                '   <td> <input style="width: 50px" type="number" class="catWeight" contenteditable="true" value="0"></td>' +
                 // '   <td id="catPercent">0.00</td>' +
                 '';
 
 let categories = document.getElementsByClassName("catName");
 let dropdown = document.getElementById('selCategory');
 
-document.onload
 $("#addAssignment").on('click', function() {
     let tb = document.getElementById("grades_summary").getElementsByTagName('tbody')[0];
     let tempTr = document.createElement('tr');
@@ -36,6 +35,7 @@ $("#addAssignment").on('click', function() {
     aScoreS1.className= 'tooltip';
     let aScoreS2 = document.createElement('span');
     aScoreS2.className = 'grade';
+    // aScoreS2.contentEditable = 'true';
     aScoreS2.id = 'assignment_score';
     aScoreS2.textContent = document.getElementById('selScore').value;
     let aScoreD2 = document.createElement('div');
@@ -61,7 +61,7 @@ $("#addAssignment").on('click', function() {
     let remDiv = document.createElement('td');
     let remBt = document.createElement('button');
     remBt.textContent = 'X';
-    remBt.className = 'remBt';
+    remBt.className = 'btn remBt';
     remBt.onclick = function(){
         $(this).parent().parent().remove()
         reCalc();
@@ -73,6 +73,10 @@ $("#addAssignment").on('click', function() {
     reCalc();
 });
 
+$(document).on('input', '.catWeight', function() {
+    console.log('test');
+    reCalc();
+});
 $(document).on('input', '.catName', function() {
     $(dropdown).empty();
     for(let i = 0; i<categories.length; i++){
@@ -82,7 +86,7 @@ $(document).on('input', '.catName', function() {
         opt.value=name;
         dropdown.appendChild(opt);
     }
-    let tableTr = document.getElementById('assignments-not-weighted').children[0].getElementsByClassName('show_grades')[0].children[1].children;
+    let tableTr = document.getElementById('table_grade_body').getElementsByTagName('tr');
     let weights = {};
     for(let i=0; i<tableTr.length-1;i++){
         let subj = tableTr[i].children[0].children[0].value;
@@ -98,6 +102,7 @@ $(document).on('input', '.catName', function() {
             group_totals[i].children[0].textContent = this.value;
         }
     }
+    reCalc();
 });
 
 function reCalc() {
@@ -106,7 +111,7 @@ function reCalc() {
     let group_totals = document.getElementsByClassName('student_assignment hard_coded group_total');
     let assignments = document.getElementById("grades_summary").querySelectorAll(".student_assignment:not(.hard_coded):not(.dropped)");
     for (let i = 0; i < assignments.length; i++) {
-        if((assignments[i].getElementsByClassName("submission_status")[0].textContent.trim()) === 'graded' || (assignments[i].getElementsByClassName("submission_status")[0].textContent.trim() === 'pending_review' && assignments[i].getElementsByClassName("submission_icon icon-quiz").length === 0) ){
+        if((assignments[i].getElementsByClassName("submission_status")[0].textContent.trim()) === 'graded' || (assignments[i].getElementsByClassName("submission_status")[0].textContent.trim() === 'unsubmitted' && assignments[i].getElementsByClassName("grade changed").length !== 0) || (assignments[i].getElementsByClassName("submission_status")[0].textContent.trim() === 'pending_review' && assignments[i].getElementsByClassName("submission_icon icon-quiz").length === 0) ){
             let subj = assignments[i].getElementsByClassName("context")[0].textContent;
             let score = assignments[i].getElementsByClassName("original_points")[0].textContent;
             if ($(assignments[i].getElementsByClassName("assignment_score")).find(".what_if_score").length > 0) {
@@ -136,7 +141,7 @@ function reCalc() {
             }
         }
     }
-    let tableTr = document.getElementById('assignments-not-weighted').children[0].getElementsByClassName('show_grades')[0].children[1].children;
+    let tableTr = document.getElementById('table_grade_body').getElementsByTagName('tr');
     let weights = {};
     let trueWeights = {};
     for (let i = 0; i < tableTr.length - 1; i++) {
@@ -173,7 +178,7 @@ function reCalc() {
     for (const [subj, vals] of Object.entries(scores)) {
         for (let i = 0; i < categories.length; i++) {
             if (categories[i].value === subj) {
-                let weight = parseFloat($(categories[i].parentElement.parentElement).find('#catWeight')[0].value);
+                let weight = parseFloat($(categories[i].parentElement.parentElement).find('.catWeight')[0].value);
                 // let finalTd = $(categories[i].parentElement.parentElement).find('#catPercent')[0];
                 let finalVals = 0;
                 if (vals[1] !== 0) {
@@ -184,11 +189,11 @@ function reCalc() {
                 // finalTd.textContent = finalVals.toFixed(2).toString() + '%';
             }
         }
-        if (finalWeight > 100) {
-            finalWeight = 100;
-        }
     }
     document.getElementById("total_grade").textContent = (finalWeight).toFixed(2).toString() + '%';
+    if (finalWeight > 100) {
+        finalWeight = 100;
+    }
     // document.getElementById("final_grade").textContent = (finalTot *100/finalWeight).toFixed(2).toString() + '%';
     if (final_grade.length === 2) {
         final_grade[0].getElementsByClassName('grade')[0].innerHTML = (finalTot / finalWeight * 100).toFixed(2).toString() + '%';
