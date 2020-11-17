@@ -199,17 +199,19 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
 
         dropdown.id = 'selCategory';
         //add dropdown to select category tr tag
-        let ddtableTr = document.getElementById('assignments-not-weighted').children[0].children[1].children[1].children;
-        let ddweights= {};
-        for (let i = 0; i < ddtableTr.length - 1; i++) {
-            let subj = ddtableTr[i].children[0].textContent;
-            ddweights[subj] = ddtableTr[i].children[1].textContent;
-        }
-        for (const [subj, vals] of Object.entries(ddweights)) {
-            opt = document.createElement('option');
-            opt.value = subj;
-            opt.textContent = subj;
-            dropdown.appendChild(opt);
+        if(document.getElementById('assignments-not-weighted').getElementsByClassName('summary').length >0) {
+            let ddtableTr = document.getElementById('assignments-not-weighted').children[0].children[1].children[1].children;
+            let ddweights = {};
+            for (let i = 0; i < ddtableTr.length - 1; i++) {
+                let subj = ddtableTr[i].children[0].textContent;
+                ddweights[subj] = ddtableTr[i].children[1].textContent;
+            }
+            for (const [subj, vals] of Object.entries(ddweights)) {
+                opt = document.createElement('option');
+                opt.value = subj;
+                opt.textContent = subj;
+                dropdown.appendChild(opt);
+            }
         }
         selCat.appendChild(dropdown);
 
@@ -300,7 +302,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
                     // tempTr.appendChild(finalTd);
                     $(tempTr).insertBefore(table);
                 }
-                document.getElementById("total_grade").textContent = (0).toFixed(2).toString() + '%';
+                doc.getElementById("total_grade").textContent = (0).toFixed(2).toString() + '%';
                 // doc.getElementById("final_grade").textContent = finalTot.toFixed(2).toString() + '%';
                 if(final_grade.length === 2) {
                     final_grade[0].getElementsByClassName('grade')[0].innerHTML = finalTot.toFixed(2).toString() + '%';
