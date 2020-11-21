@@ -38,7 +38,6 @@
             let reqGrade = document.getElementById("req_grade");
             let currGrade = document.getElementsByClassName('student_assignment final_grade');
             console.log(currWeight + '' + currGrade.length);
-            console.log(currGrade[1].innerHTML.trim());
             if(currGrade.length === 2) {
                 currGrade = currGrade[1].innerHTML.trim();
                 currGrade = currGrade.substring(7, currGrade.length - 1);

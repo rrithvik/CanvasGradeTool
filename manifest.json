@@ -3,7 +3,7 @@
 
   "name": "Canvas Easy Grader",
   "description": "This extension will increase the number of features in calculating grades on the Canvas Interface",
-  "version": "3.2",
+  "version": "3.3",
   "content_scripts": [
     {
       "matches": ["<all_urls>"],

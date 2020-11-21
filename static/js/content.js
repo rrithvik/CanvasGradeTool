@@ -110,7 +110,6 @@ function setThemes(command, imageTheme) {
     }
     style.innerHTML = css;
 }
-
 chrome.storage.sync.get(['theme', 'imageTheme'], function(data) {
     let imageTheme = data.imageTheme;
     setThemes(data.theme, imageTheme);
@@ -332,13 +331,20 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
                 if (finalWeight > 100) {
                     finalWeight = 100;
                 }
+                let final_score = 0;
+                if (finalWeight === 0){
+                    final_score = 0.00;
+                }
+                else{
+                    final_score = finalTot / finalWeight * 100;
+                }
                 // document.getElementById("final_grade").textContent = (finalTot *100/finalWeight).toFixed(2).toString() + '%';
                 if (final_grade.length === 2) {
                     final_grade[0].getElementsByClassName('grade')[0].innerHTML = (finalTot / finalWeight * 100).toFixed(2).toString() + '%';
-                    final_grade[1].innerHTML = 'Total: ' + (finalTot / finalWeight * 100).toFixed(2).toString() + '%';
+                    final_grade[1].innerHTML = 'Total: ' + (final_score).toFixed(2).toString() + '%';
                 }
                 else {
-                    final_grade[0].innerHTML = 'Total: ' + (finalTot / finalWeight * 100).toFixed(2).toString() + '%';
+                    final_grade[0].innerHTML = 'Total: ' + (final_score).toFixed(2).toString() + '%';
                 }
             };
             det.appendChild(remBt);
