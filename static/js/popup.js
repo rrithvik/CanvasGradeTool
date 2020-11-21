@@ -1,7 +1,11 @@
 var calcGrades = document.getElementById('calculate');
 var themes = document.getElementById("themeSelect");
+var check = document.getElementById("themedImages");
 // var reCalcGrades = document.getElementById('recalculate');
 
+chrome.storage.sync.get('imageTheme', function(data) {
+    check.checked = data.imageTheme;
+});
 calcGrades.onclick = function(element) {
     //update the extension storage value
     //Pass init or remove message to content script
@@ -13,8 +17,21 @@ calcGrades.onclick = function(element) {
     calcGrades.disabled = 'true';
 };
 
+check.addEventListener("change", function() {
+    let images = this.checked;
+    chrome.storage.sync.set({ imageTheme: images });
+    chrome.storage.sync.get('theme', function(data) {
+        chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+            chrome.tabs.sendMessage(tabs[0].id, {command: data.theme}, function (response) {
+                console.log(response);
+            });
+        });
+    });
+});
+
 themes.addEventListener("change", function() {
-    theme = this.value;
+    let theme = this.value;
+    chrome.storage.sync.set({ theme: theme });
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         chrome.tabs.sendMessage(tabs[0].id, {command: theme}, function(response) {
             console.log(response);
