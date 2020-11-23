@@ -1,10 +1,14 @@
 var calcGrades = document.getElementById('calculate');
 var themes = document.getElementById("themeSelect");
 var check = document.getElementById("themedImages");
+var loadThemes = document.getElementById("autoLoadTheme");
 // var reCalcGrades = document.getElementById('recalculate');
 
 chrome.storage.sync.get('imageTheme', function(data) {
     check.checked = data.imageTheme;
+});
+chrome.storage.sync.get('loadTheme', function(data) {
+    loadThemes.checked = data.loadTheme;
 });
 calcGrades.onclick = function(element) {
     //update the extension storage value
@@ -27,6 +31,11 @@ check.addEventListener("change", function() {
             });
         });
     });
+});
+
+loadThemes.addEventListener("change", function() {
+    let autoLoad = this.checked;
+    chrome.storage.sync.set({ loadTheme: autoLoad });
 });
 
 themes.addEventListener("change", function() {

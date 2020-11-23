@@ -48,18 +48,19 @@
                 dropdown.appendChild(opt);
             }
             let tableTr = document.getElementById('table_grade_body').getElementsByTagName('tr');
-            let weights = {};
+            let weights = [];
             for(let i=0; i<tableTr.length-1;i++){
                 let subj = tableTr[i].children[0].children[0].value;
-                let perc = tableTr[i].children[1].children[0].value;
-                weights[subj] = perc;
+                weights.push(subj);
             }
             let group_totals = document.getElementsByClassName('student_assignment hard_coded group_total');
             console.log(weights);
             for(let i = 0; i<group_totals.length; i++){
                 let subj = group_totals[i].children[0].textContent.trim();
-                if(!(subj in weights)){
+                if(weights.indexOf(subj) === -1){
                     group_totals[i].remove();
+                }else{
+                    weights.splice(weights.indexOf(subj), 1);
                 }
             }
             reCalc();
@@ -112,7 +113,7 @@
                 opt.value=name;
                 dropdown.appendChild(opt);
             }
-            let final_score = document.getElementsByClassName('student_assignment hard_coded final_grade')[0];
+            let final_score = document.getElementsByClassName('student_assignment hard_coded final_grade');
             let newCatTr = document.createElement('tr');
             newCatTr.className = 'student_assignment hard_coded group_total';
             newCatTr.innerHTML = '<th class="title" scope="row">\n' +
@@ -132,7 +133,13 @@
                 '        <td class="possible points_possible" aria-label="">0.00 / 0.00</td>\n' +
                 '        <td class="details">\n' +
                 '        </td>';
-            $(newCatTr).insertBefore(final_score);
+            let grades= document.getElementById("grades_summary").getElementsByTagName("tbody")[0];
+            if(final_score.length > 0) {
+                $(newCatTr).insertBefore(final_score);
+            }
+            else {
+                grades.appendChild(newCatTr);
+            }
             reCalc();
         });
         $('#recalculate').on("click", function() {

@@ -87,19 +87,21 @@ $(document).on('input', '.catName', function() {
         dropdown.appendChild(opt);
     }
     let tableTr = document.getElementById('table_grade_body').getElementsByTagName('tr');
-    let weights = {};
+    let weights = [];
     for(let i=0; i<tableTr.length-1;i++){
         let subj = tableTr[i].children[0].children[0].value;
-        let perc = tableTr[i].children[1].children[0].value;
-        weights[subj] = perc;
+        weights.push(subj);
     }
     let group_totals = document.getElementsByClassName('student_assignment hard_coded group_total');
     console.log(weights);
     for(let i = 0; i<group_totals.length; i++){
         let subj = group_totals[i].children[0].textContent.trim();
         console.log(subj);
-        if(!(subj in weights)){
+        if(weights.indexOf(subj) === -1){
             group_totals[i].children[0].textContent = this.value;
+        }
+        else{
+            weights.splice(weights.indexOf(subj), 1);
         }
     }
     reCalc();
@@ -194,12 +196,19 @@ function reCalc() {
     if (finalWeight > 100) {
         finalWeight = 100;
     }
+    let final_score = 0;
+    if (finalWeight === 0){
+        final_score = 0.00;
+    }
+    else{
+        final_score = finalTot / finalWeight * 100;
+    }
     // document.getElementById("final_grade").textContent = (finalTot *100/finalWeight).toFixed(2).toString() + '%';
     if (final_grade.length === 2) {
         final_grade[0].getElementsByClassName('grade')[0].innerHTML = (finalTot / finalWeight * 100).toFixed(2).toString() + '%';
-        final_grade[1].innerHTML = 'Total: ' + (finalTot / finalWeight * 100).toFixed(2).toString() + '%';
+        final_grade[1].innerHTML = 'Total: ' + (final_score).toFixed(2).toString() + '%';
     }
     else {
-        final_grade[0].innerHTML = 'Total: ' + (finalTot / finalWeight * 100).toFixed(2).toString() + '%';
+        final_grade[0].innerHTML = 'Total: ' + (final_score).toFixed(2).toString() + '%';
     }
 }

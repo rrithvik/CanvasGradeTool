@@ -13,108 +13,227 @@ function setThemes(command, imageTheme) {
         head.appendChild(style);
     }else{
         var css = '',
-            style = document.getElementsByClassName('canvas-easy-grader')[0];    }
+        style = document.getElementsByClassName('canvas-easy-grader')[0];
+    }
 
     if(command === 'light'){
         css = "";
     }else if(command === 'dark'){
         css = "" +
             "body {\n" +
-                "background: rgb(0, 0, 0);\n" +
-                "color: rgb(0, 0, 255);\n" +
-                "filter: invert(100%) hue-rotate(180deg);\n" +
+                "background: rgb(0, 0, 0) !important;\n" +
+                "color: rgb(0, 0, 255) !important;\n" +
+                "filter: invert(100%) hue-rotate(180deg) !important;\n" +
             "}\n";
         if (!imageTheme) {
             css += "" +
             "img {\n" +
-                "filter: invert(100%) hue-rotate(180deg);\n" +
+                "filter: invert(100%) hue-rotate(180deg) !important;\n" +
             "}\n";
         }
     }
     else if(command === 'inverted'){
         css = "" +
             "body{\n" +
-            "    background:#000;\n" +
-            "    -webkit-filter: invert(100%);\n" +
-            "    filter: invert(100%);\n" +
+            "    background:#000 !important;\n" +
+            "    -webkit-filter: invert(100%) !important;\n" +
+            "    filter: invert(100%) !important;\n" +
             "}\n";
         if (!imageTheme) {
             css += "" +
             "img {\n" +
-            "    webkit-filter: invert(100%);\n" +
-            "    filter: invert(100%);\n" +
+            "    webkit-filter: invert(100%) !important;\n" +
+            "    filter: invert(100%) !important;\n" +
             "}\n";
         }
     }
     else if(command === 'dark-glow'){
         css = "" +
             "body {\n" +
-            "    background:#000;\n" +
-            "    color: #f00;\n" +
-            "    -webkit-filter: invert(100%);\n" +
-            "    filter: invert(100%);\n" +
+            "    background:#000 !important;\n" +
+            "    color: #f00 !important;\n" +
+            "    -webkit-filter: invert(100%) !important;\n" +
+            "    filter: invert(100%) !important;\n" +
             "}\n";
         if (!imageTheme) {
             css += "" +
             "img {\n" +
-            "    webkit-filter: invert(100%);\n" +
-            "    filter: invert(100%);\n" +
+            "    webkit-filter: invert(100%) !important;\n" +
+            "    filter: invert(100%) !important;\n" +
             "}\n";
         }
     }
     else if(command === 'bnw'){
         css = "" +
             "body {\n" +
-                "filter: grayscale(100%);\n" +
+                "filter: grayscale(100%) !important;\n" +
             "}\n";
         if (!imageTheme) {
             css += "" +
             "img {\n" +
-            "    filter: grayscale(0%);\n" +
+            "    filter: grayscale(0%) !important;\n" +
             "}\n";
         }
     }
     else if(command === 'hot-pink'){
         css = "" +
             "body {\n" +
-                "background: rgb(0, 0, 0);\n" +
-                "color: rgb(0, 0, 0);\n" +
-                "filter: invert(100%) hue-rotate(270deg) drop-shadow(16px 16px 50px purple);\n" +
+                "background: rgb(0, 0, 0) !important;\n" +
+                "color: rgb(0, 0, 0) !important;\n" +
+                "filter: invert(100%) hue-rotate(270deg) drop-shadow(16px 16px 80px rgba(255,0,255,0.7)) !important;\n" +
             "}\n";
         if (!imageTheme) {
             css += "" +
             "img {\n" +
-            "    filter: invert(100%) hue-rotate(90deg) drop-shadow(0px 0px 0px blue);\n" +
+            "    filter: invert(100%) hue-rotate(90deg) drop-shadow(0px 0px 0px blue) !important;\n" +
             "}\n";
         }
     }
     else if(command === 'dark-future'){
         css = "" +
             "body {\n" +
-                "background: rgb(0, 0, 0);\n" +
-                "color: rgb(0, 0, 255);\n" +
-                "filter: invert(100%) hue-rotate(180deg) drop-shadow(16px 16px 50px blue);\n" +
+                "background: rgb(0, 0, 0) !important;\n" +
+                "color: rgb(0, 0, 255) !important;\n" +
+                "filter: invert(100%) hue-rotate(180deg) drop-shadow(16px 16px 80px rgba(0,0,255,0.7)) !important;\n" +
             "}\n";
         if (!imageTheme) {
             css += "" +
             "img {\n" +
-            "    filter: invert(100%) hue-rotate(180deg) drop-shadow(0px 0px 0px blue);\n" +
+            "    filter: invert(100%) hue-rotate(180deg) drop-shadow(0px 0px 0px blue) !important;\n" +
             "}\n";
         }
     }
     else if(command === 'purple'){
         css = "" +
             "body {\n" +
-                "filter: hue-rotate(45deg);\n" +
+                "filter: hue-rotate(45deg) !important;\n" +
             "}\n";
     }
     style.innerHTML = css;
 }
-
-chrome.storage.sync.get(['theme', 'imageTheme'], function(data) {
-    let imageTheme = data.imageTheme;
-    setThemes(data.theme, imageTheme);
+// function presetThemes(command, imageTheme) {
+//     if(document.getElementsByClassName('pre-canvas-easy-grader').length=== 0){
+//         var css = '',
+//             head = document.head || document.getElementsByTagName('head')[0],
+//             style = document.createElement('style');
+//         style.className = 'pre-canvas-easy-grader';
+//
+//         head.appendChild(style);
+//     }else{
+//         var css = '',
+//             style = document.getElementsByClassName('pre-canvas-easy-grader')[0];
+//     }
+//
+//     if(command === 'light'){
+//         css = "";
+//     }else if(command === 'dark'){
+//         css = "" +
+//             "body {\n" +
+//                 "background: rgb(0, 0, 0) !important;\n " +
+//                 "color: rgb(0, 0, 255) !important;\n" +
+//                 "filter: invert(100%) hue-rotate(180deg) !important;\n" +
+//             "}\n";
+//         if (!imageTheme) {
+//             css += "" +
+//             "img {\n" +
+//                 "filter: invert(100%) hue-rotate(180deg);\n" +
+//             "}\n";
+//         }
+//     }
+//     else if(command === 'inverted'){
+//         css = "" +
+//             "body{\n" +
+//             "    background:#000;\n" +
+//             "    -webkit-filter: invert(100%);\n" +
+//             "    filter: invert(100%);\n" +
+//             "}\n";
+//         if (!imageTheme) {
+//             css += "" +
+//             "img {\n" +
+//             "    webkit-filter: invert(100%);\n" +
+//             "    filter: invert(100%);\n" +
+//             "}\n";
+//         }
+//     }
+//     else if(command === 'dark-glow'){
+//         css = "" +
+//             "body {\n" +
+//             "    background:#000;\n" +
+//             "    color: #f00;\n" +
+//             "    -webkit-filter: invert(100%);\n" +
+//             "    filter: invert(100%);\n" +
+//             "}\n";
+//         if (!imageTheme) {
+//             css += "" +
+//             "img {\n" +
+//             "    webkit-filter: invert(100%);\n" +
+//             "    filter: invert(100%);\n" +
+//             "}\n";
+//         }
+//     }
+//     else if(command === 'bnw'){
+//         css = "" +
+//             "body {\n" +
+//                 "filter: grayscale(100%);\n" +
+//             "}\n";
+//         if (!imageTheme) {
+//             css += "" +
+//             "img {\n" +
+//             "    filter: grayscale(0%);\n" +
+//             "}\n";
+//         }
+//     }
+//     else if(command === 'hot-pink'){
+//         css = "" +
+//             "body {\n" +
+//                 "background: rgb(0, 0, 0);\n" +
+//                 "color: rgb(0, 0, 0);\n" +
+//                 "filter: invert(100%) hue-rotate(270deg) drop-shadow(16px 16px 80px purple);\n" +
+//             "}\n";
+//         if (!imageTheme) {
+//             css += "" +
+//             "img {\n" +
+//             "    filter: invert(100%) hue-rotate(90deg) drop-shadow(0px 0px 0px blue);\n" +
+//             "}\n";
+//         }
+//     }
+//     else if(command === 'dark-future'){
+//         css = "" +
+//             "body {\n" +
+//                 "background: rgb(0, 0, 0);\n" +
+//                 "color: rgb(0, 0, 255);\n" +
+//                 "filter: invert(100%) hue-rotate(180deg) drop-shadow(16px 16px 80px blue);\n" +
+//             "}\n";
+//         if (!imageTheme) {
+//             css += "" +
+//             "img {\n" +
+//             "    filter: invert(100%) hue-rotate(180deg) drop-shadow(0px 0px 0px blue);\n" +
+//             "}\n";
+//         }
+//     }
+//     else if(command === 'purple'){
+//         css = "" +
+//             "body {\n" +
+//                 "filter: hue-rotate(45deg);\n" +
+//             "}\n";
+//     }
+//     style.innerHTML = css;
+// }
+chrome.storage.sync.get(['theme', 'loadTheme','imageTheme'], function(data) {
+    if(data.loadTheme === true) {
+        let imageTheme = data.imageTheme;
+        setThemes(data.theme, imageTheme);
+    }
 });
+// document.addEventListener('DOMContentLoaded', function() {
+//     chrome.storage.sync.get(['theme', 'loadTheme','imageTheme'], function(data) {
+//         if(data.loadTheme === true) {
+//             let imageTheme = data.imageTheme;
+//             setThemes(data.theme, imageTheme);
+//         }
+//     });
+//         document.getElementsByClassName('pre-canvas-easy-grader')[0].remove();
+// });
 //message listener for background
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    {
     chrome.storage.sync.get(['theme', 'imageTheme'], function(data) {
@@ -332,13 +451,20 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
                 if (finalWeight > 100) {
                     finalWeight = 100;
                 }
+                let final_score = 0;
+                if (finalWeight === 0){
+                    final_score = 0.00;
+                }
+                else{
+                    final_score = finalTot / finalWeight * 100;
+                }
                 // document.getElementById("final_grade").textContent = (finalTot *100/finalWeight).toFixed(2).toString() + '%';
                 if (final_grade.length === 2) {
                     final_grade[0].getElementsByClassName('grade')[0].innerHTML = (finalTot / finalWeight * 100).toFixed(2).toString() + '%';
-                    final_grade[1].innerHTML = 'Total: ' + (finalTot / finalWeight * 100).toFixed(2).toString() + '%';
+                    final_grade[1].innerHTML = 'Total: ' + (final_score).toFixed(2).toString() + '%';
                 }
                 else {
-                    final_grade[0].innerHTML = 'Total: ' + (finalTot / finalWeight * 100).toFixed(2).toString() + '%';
+                    final_grade[0].innerHTML = 'Total: ' + (final_score).toFixed(2).toString() + '%';
                 }
             };
             det.appendChild(remBt);
@@ -446,6 +572,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
                 let doc = new DOMParser().parseFromString(data, 'text/html');
                 let table = doc.getElementById("tot_table_row");
                 let finalTot = 0;
+                let finalWeight = 0;
                 let dropdown = document.getElementById('selCategory');
                 $(dropdown).empty();
 
@@ -476,6 +603,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
                         finalVals = vals[0] / vals[1] * 100;
                     }
                     finalTot += (finalVals / 100 * weight);
+                    if(scores[subj][1] !== 0)
+                        finalWeight += (100 / Object.keys(scores).length);
                     // tempTd.contentEditable = "true";
                     console.log(weight.toString());
                     tempWeight.setAttribute('value', weight.toString());
@@ -486,13 +615,25 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
                     // tempTr.appendChild(finalTd);
                     $(tempTr).insertBefore(table);
                 }
-                doc.getElementById("total_grade").textContent = (0).toFixed(2).toString() + '%';
+                doc.getElementById("total_grade").textContent = (finalWeight).toFixed(2).toString() + '%';
                 // doc.getElementById("final_grade").textContent = finalTot.toFixed(2).toString() + '%';
-                if(final_grade.length === 2) {
-                    final_grade[0].getElementsByClassName('grade')[0].innerHTML = finalTot.toFixed(2).toString() + '%';
-                    final_grade[1].innerHTML = 'Total: ' + finalTot.toFixed(2).toString() + '%';
-                }else{
-                    final_grade[0].innerHTML = 'Total: ' + finalTot.toFixed(2).toString() + '%';
+                if (finalWeight > 100) {
+                    finalWeight = 100;
+                }
+                let final_score = 0;
+                if (finalWeight === 0){
+                    final_score = 0.00;
+                }
+                else{
+                    final_score = finalTot / finalWeight * 100;
+                }
+                // document.getElementById("final_grade").textContent = (finalTot *100/finalWeight).toFixed(2).toString() + '%';
+                if (final_grade.length === 2) {
+                    final_grade[0].getElementsByClassName('grade')[0].innerHTML = (final_score).toFixed(2).toString() + '%';
+                    final_grade[1].innerHTML = 'Total: ' + (final_score).toFixed(2).toString() + '%';
+                }
+                else {
+                    final_grade[0].innerHTML = 'Total: ' + (final_score).toFixed(2).toString() + '%';
                 }cont.appendChild(doc.firstChild);
                 $(cont.innerHTML).insertBefore(loc);
                 loc.remove();
@@ -561,11 +702,20 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
                 if (finalWeight > 100) {
                     finalWeight = 100;
                 }
-                if(final_grade.length === 2) {
-                    final_grade[0].getElementsByClassName('grade')[0].innerHTML = (finalTot / finalWeight * 100).toFixed(2).toString() + '%';
-                    final_grade[1].innerHTML = 'Total: ' + (finalTot / finalWeight * 100).toFixed(2).toString() + '%';
-                }else{
-                    final_grade[0].innerHTML = 'Total: ' + (finalTot / finalWeight * 100).toFixed(2).toString() + '%';
+                let final_score = 0;
+                if (finalWeight === 0){
+                    final_score = 0.00;
+                }
+                else{
+                    final_score = finalTot / finalWeight * 100;
+                }
+                // document.getElementById("final_grade").textContent = (finalTot *100/finalWeight).toFixed(2).toString() + '%';
+                if (final_grade.length === 2) {
+                    final_grade[0].getElementsByClassName('grade')[0].innerHTML = (final_score).toFixed(2).toString() + '%';
+                    final_grade[1].innerHTML = 'Total: ' + (final_score).toFixed(2).toString() + '%';
+                }
+                else {
+                    final_grade[0].innerHTML = 'Total: ' + (final_score).toFixed(2).toString() + '%';
                 }
                 cont.appendChild(doc.firstChild);
                 $(cont.innerHTML).insertBefore(loc);
