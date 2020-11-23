@@ -21,11 +21,10 @@
   <component name="ChangeListManager">
     <list default="true" id="9e865f11-57ff-4e92-92c4-c499f9d79770" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/manifest.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/js/content.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/content.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/js/injectScript.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/injectScript.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/finalGradeCalc.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/finalGradeCalc.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/popup.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/popup.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/popup.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/popup.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/table.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/table.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +77,8 @@
       <workItem from="1605214116534" duration="22369000" />
       <workItem from="1605426284810" duration="133000" />
       <workItem from="1605626095969" duration="3232000" />
-      <workItem from="1605963138238" duration="7489000" />
+      <workItem from="1605963138238" duration="7798000" />
+      <workItem from="1606118439033" duration="5750000" />
     </task>
     <servers />
   </component>
