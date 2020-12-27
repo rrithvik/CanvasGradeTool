@@ -1,11 +1,15 @@
 var calcGrades = document.getElementById('calculate');
 var themes = document.getElementById("themeSelect");
-var check = document.getElementById("themedImages");
+var imgCheck = document.getElementById("themedImages");
+var videoCheck = document.getElementById("themedVideos");
 var loadThemes = document.getElementById("autoLoadTheme");
 // var reCalcGrades = document.getElementById('recalculate');
 
 chrome.storage.sync.get('imageTheme', function(data) {
-    check.checked = data.imageTheme;
+    imgCheck.checked = data.imageTheme;
+});
+chrome.storage.sync.get('videoTheme', function(data) {
+    videoCheck.checked = data.videoTheme;
 });
 chrome.storage.sync.get('loadTheme', function(data) {
     loadThemes.checked = data.loadTheme;
@@ -21,9 +25,20 @@ calcGrades.onclick = function(element) {
     calcGrades.disabled = 'true';
 };
 
-check.addEventListener("change", function() {
+imgCheck.addEventListener("change", function() {
     let images = this.checked;
     chrome.storage.sync.set({ imageTheme: images });
+    chrome.storage.sync.get('theme', function(data) {
+        chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+            chrome.tabs.sendMessage(tabs[0].id, {command: data.theme}, function (response) {
+                console.log(response);
+            });
+        });
+    });
+});
+videoCheck.addEventListener("change", function() {
+    let images = this.checked;
+    chrome.storage.sync.set({ videoTheme: images });
     chrome.storage.sync.get('theme', function(data) {
         chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
             chrome.tabs.sendMessage(tabs[0].id, {command: data.theme}, function (response) {

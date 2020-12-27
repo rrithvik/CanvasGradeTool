@@ -3,7 +3,7 @@
 //
 // }
 function getScores() {}
-function setThemes(command, imageTheme) {
+function setThemes(command, imageTheme, videoTheme) {
     if(document.getElementsByClassName('canvas-easy-grader').length=== 0){
         var css = '',
             head = document.head || document.getElementsByTagName('head')[0],
@@ -31,7 +31,14 @@ function setThemes(command, imageTheme) {
                 "filter: invert(100%) hue-rotate(180deg) !important;\n" +
             "}\n";
         }
+        if (!videoTheme) {
+            css += "" +
+            "video {\n" +
+                "filter: invert(100%) hue-rotate(180deg) !important;\n" +
+            "}\n";
+        }
     }
+
     else if(command === 'inverted'){
         css = "" +
             "body{\n" +
@@ -42,6 +49,13 @@ function setThemes(command, imageTheme) {
         if (!imageTheme) {
             css += "" +
             "img {\n" +
+            "    webkit-filter: invert(100%) !important;\n" +
+            "    filter: invert(100%) !important;\n" +
+            "}\n";
+        }
+        if (!videoTheme) {
+            css += "" +
+            "video {\n" +
             "    webkit-filter: invert(100%) !important;\n" +
             "    filter: invert(100%) !important;\n" +
             "}\n";
@@ -62,6 +76,13 @@ function setThemes(command, imageTheme) {
             "    filter: invert(100%) !important;\n" +
             "}\n";
         }
+        if (!videoTheme) {
+            css += "" +
+            "video {\n" +
+            "    webkit-filter: invert(100%) !important;\n" +
+            "    filter: invert(100%) !important;\n" +
+            "}\n";
+        }
     }
     else if(command === 'bnw'){
         css = "" +
@@ -71,7 +92,13 @@ function setThemes(command, imageTheme) {
         if (!imageTheme) {
             css += "" +
             "img {\n" +
-            "    filter: grayscale(0%) !important;\n" +
+            "    filter: grayscale(100%) !important;\n" +
+            "}\n";
+        }
+        if (!videoTheme) {
+            css += "" +
+            "video {\n" +
+            "    filter: grayscale(100%) !important;\n" +
             "}\n";
         }
     }
@@ -88,6 +115,12 @@ function setThemes(command, imageTheme) {
             "    filter: invert(100%) hue-rotate(90deg) drop-shadow(0px 0px 0px blue) !important;\n" +
             "}\n";
         }
+        if (!videoTheme) {
+            css += "" +
+            "video {\n" +
+            "    filter: invert(100%) hue-rotate(90deg) drop-shadow(0px 0px 0px blue) !important;\n" +
+            "}\n";
+        }
     }
     else if(command === 'dark-future'){
         css = "" +
@@ -99,6 +132,12 @@ function setThemes(command, imageTheme) {
         if (!imageTheme) {
             css += "" +
             "img {\n" +
+            "    filter: invert(100%) hue-rotate(180deg) drop-shadow(0px 0px 0px blue) !important;\n" +
+            "}\n";
+        }
+        if (!videoTheme) {
+            css += "" +
+            "video {\n" +
             "    filter: invert(100%) hue-rotate(180deg) drop-shadow(0px 0px 0px blue) !important;\n" +
             "}\n";
         }
@@ -219,10 +258,11 @@ function setThemes(command, imageTheme) {
 //     }
 //     style.innerHTML = css;
 // }
-chrome.storage.sync.get(['theme', 'loadTheme','imageTheme'], function(data) {
+chrome.storage.sync.get(['theme', 'loadTheme','imageTheme', 'videoTheme'], function(data) {
     if(data.loadTheme === true) {
         let imageTheme = data.imageTheme;
-        setThemes(data.theme, imageTheme);
+        let videoTheme = data.videoTheme;
+        setThemes(data.theme, imageTheme, videoTheme);
     }
 });
 // document.addEventListener('DOMContentLoaded', function() {
@@ -236,9 +276,10 @@ chrome.storage.sync.get(['theme', 'loadTheme','imageTheme'], function(data) {
 // });
 //message listener for background
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    {
-    chrome.storage.sync.get(['theme', 'imageTheme'], function(data) {
+    chrome.storage.sync.get(['theme', 'imageTheme', 'videoTheme'], function(data) {
         let imageTheme = data.imageTheme;
-        setThemes(data.theme, imageTheme);
+        let videoTheme = data.videoTheme;
+        setThemes(data.theme, imageTheme, videoTheme);
     });
     if(request.command === 'clicked') {
         let s = document.createElement('script');
