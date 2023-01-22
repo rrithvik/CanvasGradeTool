@@ -234,8 +234,10 @@ chrome.storage.sync.get(['theme', 'loadTheme','imageTheme'], function(data) {
 //     });
 //         document.getElementsByClassName('pre-canvas-easy-grader')[0].remove();
 // });
+
 //message listener for background
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    {
+    sendResponse({status: 'ok'});
     chrome.storage.sync.get(['theme', 'imageTheme'], function(data) {
         let imageTheme = data.imageTheme;
         setThemes(data.theme, imageTheme);
@@ -259,7 +261,41 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
                 if (isNaN(parseFloat(score))) {
                     score = '0';
                 }
-                let possible = assignments[i].getElementsByClassName("points_possible")[0].textContent;
+
+                let possible = '0';
+                if ($(assignments[i].getElementsByClassName("assignment_score")).find(".tooltip").length > 0) {
+                    if ($(assignments[i].getElementsByClassName("assignment_score"))[0].getElementsByClassName("tooltip")[0].children.length > 1) {
+                        possible = $(assignments[i].getElementsByClassName("assignment_score"))[0].getElementsByClassName("tooltip")[0].children[1].textContent.replace('/ ', '');
+                        let aTotal = document.createElement('td');
+                        aTotal.className = "possible points_possible";
+                        aTotal.textContent = possible;
+                        aTotal.setAttribute("hidden", "true");
+                        assignments[i].appendChild(aTotal);
+                    }
+                    else {
+                        let tempScore = document.createElement("span");
+                        tempScore.textContent = " " + score + " ";
+                        let tempPossible = document.createElement("span");
+                        tempPossible.textContent = "/ " + score;
+                        if ($(assignments[i].getElementsByClassName("assignment_score")).find(".graded_icon").length > 0) {
+                            $(assignments[i].getElementsByClassName("assignment_score"))[0].getElementsByClassName("graded_icon icon-check")[0].remove()
+                        }
+                        if (assignments[i].getElementsByClassName("assignment_score")[0].getElementsByClassName("grade")[0].innerHTML.includes("%")){
+                            let innerHTML = $(assignments[i].getElementsByClassName("assignment_score"))[0].getElementsByClassName("grade")[0].innerHTML.replace('%', '');
+                            $(assignments[i].getElementsByClassName("assignment_score"))[0].getElementsByClassName("grade")[0].innerHTML = innerHTML;
+                        }
+                        else {
+                            $(assignments[i].getElementsByClassName("assignment_score"))[0].getElementsByClassName("grade")[0].appendChild(tempScore);
+                        }
+                        $(assignments[i].getElementsByClassName("assignment_score"))[0].getElementsByClassName("tooltip")[0].appendChild(tempPossible)
+                        possible = $(assignments[i].getElementsByClassName("assignment_score"))[0].getElementsByClassName("tooltip")[0].children[1].textContent.replace('/ ', '');
+                        let aTotal = document.createElement('td');
+                        aTotal.className = "possible points_possible";
+                        aTotal.textContent = possible;
+                        aTotal.setAttribute("hidden", "true");
+                        assignments[i].appendChild(aTotal);
+                    }
+                }
                 if (isNaN(parseFloat(possible))) {
                     possible = '0';
                 }
@@ -532,17 +568,19 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
         selScore.style = 'max-width: 50px;';
         selScoreTd.appendChild(selScore);
         // selScore.contentEditable = 'true';
+        selScoreTd.append(" / ");
         selTotal.id = 'selTotal';
         selTotal.value = '0';
         selTotal.type = 'number';
         selTotal.style = 'max-width: 50px;';
-        selTotalTd.appendChild(selTotal);
+        selScoreTd.appendChild(selTotal);
         // selTotal.contentEditable = 'true';
 
         //configure the Add Button
         addElemBt.id = 'addAssignment';
         addElemBt.className = 'btn';
         addElemBt.textContent = '+';
+        addElemBD.style.textAlign = 'right';
         addElemBD.appendChild(addElemBt);
 
         //add All Elements to the larger Element to add to the document to allow for adding assignments
@@ -550,7 +588,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)    
         addElements.appendChild(selCat);
         addElements.appendChild(empStat);
         addElements.appendChild(selScoreTd);
-        addElements.appendChild(selTotalTd);
+        // addElements.appendChild(selTotalTd);
         addElements.appendChild(addElemBD);
 
         tb.insertBefore(addElements, tb.firstChild);

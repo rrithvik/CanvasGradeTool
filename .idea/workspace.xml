@@ -20,11 +20,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9e865f11-57ff-4e92-92c4-c499f9d79770" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/static/css/bootstrap.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/js/bootstrap.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/js/finalGradeCalc.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/js/jquery-3.6.3.slim.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/js/popper-2.11.6.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/js/table.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/CanvasGradeTool.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/CanvasGradeTool.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/manifest.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/js/content.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/content.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/js/popup.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/popup.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/injectScript.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/injectScript.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/finalGradeCalc.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/finalGradeCalc.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/popup.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/popup.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/table.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/table.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,29 +43,27 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="JsFlowSettings">
-    <service-enabled>true</service-enabled>
-    <exe-path />
-    <other-services-enabled>true</other-services-enabled>
-    <auto-save>true</auto-save>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="1i2QLql9nUSwufKgy3tIASiDdrx" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="node.js.detected.package.eslint" value="true" />
-    <property name="node.js.detected.package.tslint" value="true" />
-    <property name="node.js.path.for.package.eslint" value="project" />
-    <property name="node.js.path.for.package.tslint" value="project" />
-    <property name="node.js.selected.package.eslint" value="(autodetect)" />
-    <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="liveEdit" />
-    <property name="vue.rearranger.settings.migration" value="true" />
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Rithvik\Documents\GitHub\CanvasGradeTool\static\js" />
+      <recent name="C:\Users\Rithvik\Documents\GitHub\CanvasGradeTool\static\css" />
+    </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -79,6 +86,7 @@
       <workItem from="1605626095969" duration="3232000" />
       <workItem from="1605963138238" duration="7798000" />
       <workItem from="1606118439033" duration="5750000" />
+      <workItem from="1674342022472" duration="24216000" />
     </task>
     <servers />
   </component>
@@ -95,12 +103,5 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="385" y="196" key="search.everywhere.popup" timestamp="1605970473153">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state x="385" y="196" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1605970473153" />
   </component>
 </project>

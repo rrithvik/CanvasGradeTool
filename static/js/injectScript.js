@@ -37,7 +37,7 @@ $("#addAssignment").on('click', function() {
     aScoreS2.className = 'grade';
     // aScoreS2.contentEditable = 'true';
     aScoreS2.id = 'assignment_score';
-    aScoreS2.textContent = document.getElementById('selScore').value;
+    aScoreS2.textContent = document.getElementById('selScore').value + " / " + document.getElementById('selTotal').value;
     let aScoreD2 = document.createElement('div');
     aScoreD2.style = 'display: none;';
     let aScoreS3 = document.createElement('span');
@@ -54,11 +54,13 @@ $("#addAssignment").on('click', function() {
     aScoreDiv.appendChild(aScoreD1);
     tempTr.appendChild(aScoreDiv);
 
-    let aTotal = document.createElement('td')
-    aTotal.className = "possible points_possible"
+    let aTotal = document.createElement('td');
+    aTotal.className = "possible points_possible";
     aTotal.textContent = document.getElementById('selTotal').value;
+    aTotal.setAttribute("hidden", "true");
     tempTr.appendChild(aTotal);
     let remDiv = document.createElement('td');
+    remDiv.style.textAlign = "right";
     let remBt = document.createElement('button');
     remBt.textContent = 'X';
     remBt.className = 'btn remBt';
@@ -122,10 +124,22 @@ function reCalc() {
             if (isNaN(parseFloat(score))) {
                 score = '0';
             }
-            let possible = assignments[i].getElementsByClassName("points_possible")[0].textContent;
+            console.log(assignments[i]);
+            let possible = '0';
+            if (assignments[i].getElementsByClassName("points_possible").length > 0) {
+                possible = assignments[i].getElementsByClassName("points_possible")[0].textContent;
+            }
+            else {
+                possible = $(assignments[i].getElementsByClassName("assignment_score"))[0].getElementsByClassName("tooltip")[0].children[1].textContent.replace('/ ', '');
+            }
             if (isNaN(parseFloat(possible))) {
                 possible = '0';
             }
+            let aTotal = document.createElement('td');
+            aTotal.className = "possible points_possible";
+            aTotal.textContent = possible;
+            aTotal.setAttribute("hidden", "true");
+            assignments[i].appendChild(aTotal);
             if (subj in scores) {
                 if ($(assignments[i].getElementsByClassName("assignment_score")).find(".icon-off").length === 0) {
                     scores[subj][0] += parseFloat(score);
@@ -212,3 +226,159 @@ function reCalc() {
         final_grade[0].innerHTML = 'Total: ' + (final_score).toFixed(2).toString() + '%';
     }
 }
+
+//TABLE.JS
+let tableTr = document.getElementById('table_grade_body').getElementsByTagName('tr');
+for (let i = 0; i < tableTr.length - 1; i++) {
+    let remDiv = document.createElement('div');
+    remDiv.style = "color:red";
+    remDiv.className = "remCategory";
+    remDiv.innerHTML = "X";
+    $(remDiv).insertBefore(tableTr[i]);
+}
+
+
+$(".remCategory").on('click', function() {
+    this.nextElementSibling.remove();
+    this.remove();
+    $(dropdown).empty();
+    for(let i = 0; i<categories.length; i++){
+        let name = categories[i].value;
+        let opt = document.createElement('option');
+        opt.textContent=name;
+        opt.value=name;
+        dropdown.appendChild(opt);
+    }
+    let tableTr = document.getElementById('table_grade_body').getElementsByTagName('tr');
+    let weights = [];
+    for(let i=0; i<tableTr.length-1;i++){
+        let subj = tableTr[i].children[0].children[0].value;
+        weights.push(subj);
+    }
+    let group_totals = document.getElementsByClassName('student_assignment hard_coded group_total');
+    console.log(weights);
+    for(let i = 0; i<group_totals.length; i++){
+        let subj = group_totals[i].children[0].textContent.trim();
+        if(weights.indexOf(subj) === -1){
+            group_totals[i].remove();
+        }else{
+            weights.splice(weights.indexOf(subj), 1);
+        }
+    }
+    reCalc();
+});
+$("#addCatBt").on('click', function() {
+    let body = document.getElementById("table_grade_body");
+    let ttr = document.getElementById("tot_table_row");
+    let temp = document.createElement('tr');
+    temp.innerHTML = tempCat;
+    let remDiv = document.createElement('div');
+    remDiv.style = "color:red";
+    remDiv.className = "remCategory";
+    remDiv.onclick = function () {
+        this.nextElementSibling.remove();
+        this.remove();
+        $(dropdown).empty();
+        for(let i = 0; i<categories.length; i++){
+            let name = categories[i].value;
+            let opt = document.createElement('option');
+            opt.textContent=name;
+            opt.value=name;
+            dropdown.appendChild(opt);
+        }
+        let tableTr = document.getElementById('table_grade_body').getElementsByTagName('tr');
+        let weights = {};
+        for(let i=0; i<tableTr.length-1;i++){
+            let subj = tableTr[i].children[0].children[0].value;
+            let perc = tableTr[i].children[1].children[0].value;
+            weights[subj] = perc;
+        }
+        let group_totals = document.getElementsByClassName('student_assignment hard_coded group_total');
+        console.log(weights);
+        for(let i = 0; i<group_totals.length; i++){
+            let subj = group_totals[i].children[0].textContent.trim();
+            if(!(subj in weights)){
+                group_totals[i].remove();
+            }
+        }
+        reCalc();
+    };
+    remDiv.innerHTML = "X";
+    $(remDiv).insertBefore(ttr);
+    body.insertBefore(temp, ttr);
+
+    $(dropdown).empty();
+    for(let i = 0; i<categories.length; i++){
+        let name = categories[i].value;
+        let opt = document.createElement('option');
+        opt.textContent=name;
+        opt.value=name;
+        dropdown.appendChild(opt);
+    }
+    let final_score = document.getElementsByClassName('student_assignment hard_coded final_grade');
+    let newCatTr = document.createElement('tr');
+    newCatTr.className = 'student_assignment hard_coded group_total';
+    newCatTr.innerHTML = '<th class="title" scope="row">\n' +
+        'CATEGORY NAME\n' +
+        '        </th>\n' +
+        '        <td class="due">\n' +
+        '        </td>\n' +
+        '\n' +
+        '        <td class="status" scope="row">\n' +
+        '        </td>\n' +
+        '\n' +
+        '        <td class="assignment_score" title="">\n' +
+        '          <div style="position: relative; height: 100%;" class="score_holder">\n' +
+        '              <span class="grade">NaN%</span>\n' +
+        '          </div>\n' +
+        '        </td>\n' +
+        '        <td class="possible points_possible" aria-label="">0.00 / 0.00</td>\n' +
+        '        <td class="details">\n' +
+        '        </td>';
+    let grades= document.getElementById("grades_summary").getElementsByTagName("tbody")[0];
+    if(final_score.length > 0) {
+        $(newCatTr).insertBefore(final_score);
+    }
+    else {
+        grades.appendChild(newCatTr);
+    }
+    reCalc();
+});
+$('#recalculate').on("click", function() {
+    console.log("clicked");
+    reCalc();
+});
+
+//finalGradeCalc.js
+$("#calculate_final").on('click', function() {
+    reCalc();
+    let currWeight = document.getElementById("total_grade").innerHTML;
+    currWeight = currWeight.substring(0,currWeight.length-1);
+    let desGrade = document.getElementById('desired_grade').value;
+    let finWeight = document.getElementById('final_weight').value;
+    let reqGrade = document.getElementById("req_grade");
+    let currGrade = document.getElementsByClassName('student_assignment final_grade');
+    console.log(currWeight + '' + currGrade.length);
+    if(currGrade.length === 2) {
+        currGrade = currGrade[1].innerHTML.trim();
+        currGrade = currGrade.substring(7, currGrade.length - 1);
+    }
+    else {
+        currGrade = currGrade[0].innerHTML.trim();
+        currGrade = currGrade.substring(7, currGrade.length - 1);
+    }
+    let weightedCurr = parseFloat(currWeight) * parseFloat(currGrade);
+    console.log(currGrade);
+    console.log("curr: " + weightedCurr);
+    let finGrade = parseFloat(desGrade) * (parseFloat(currWeight) + parseFloat(finWeight)) - weightedCurr;
+    console.log("fin: " + finGrade);
+    finGrade = (finGrade/parseFloat(finWeight)).toFixed(2);
+    if(finGrade < -1000){
+        finGrade = '<h5 style="font-max-size: small; color: red">Please Make Sure All Fields Are Inputted Correctly</h5>';
+    }
+    else{
+        finGrade = finGrade.toString() + '%';
+    }
+    reqGrade.innerHTML = finGrade;
+    $("#req_final_grade").show();
+});
